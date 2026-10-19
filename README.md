@@ -57,8 +57,79 @@ their own app styled like that panel.
 
 ## Install
 
-Dependencies (Arch Linux names): `glib2 pipewire wireplumber gtk4 libadwaita python
-python-gobject libpulse gnome-shell` and, to build, `meson`.
+Equalizer is made of three parts that ship together: the audio filter (a systemd user
+service), the settings app and the GNOME Shell extension. The packages below install all
+three; the filter starts together with PipeWire, so there is nothing to enable besides the
+extension.
+
+Packages for each release are on the [Releases](https://github.com/cloudie-code/gnome-equalizer/releases) page.
+
+### Arch Linux
+
+```bash
+sudo pacman -U gnome-equalizer-*.pkg.tar.zst
+```
+
+Or build it from [`packaging/arch/PKGBUILD`](packaging/arch/PKGBUILD) with `makepkg -si`.
+
+### Debian and Ubuntu
+
+```bash
+sudo apt install ./gnome-equalizer_*.deb
+```
+
+### Fedora
+
+```bash
+sudo dnf install ./gnome-equalizer-*.x86_64.rpm
+```
+
+### Nix and NixOS
+
+```bash
+nix profile install github:cloudie-code/gnome-equalizer
+```
+
+On NixOS, use the flake's module so the service is started with PipeWire:
+
+```nix
+{
+  inputs.gnome-equalizer.url = "github:cloudie-code/gnome-equalizer";
+
+  outputs = { nixpkgs, gnome-equalizer, ... }: {
+    nixosConfigurations.my-pc = nixpkgs.lib.nixosSystem {
+      modules = [
+        gnome-equalizer.nixosModules.default
+        { programs.gnome-equalizer.enable = true; }
+      ];
+    };
+  };
+}
+```
+
+### Enable the extension
+
+On Wayland, GNOME Shell only sees a newly installed extension after logging out and back in.
+Then:
+
+```bash
+gnome-extensions enable equalizer@cloudie-code.github.io
+```
+
+### GNOME Shell extension only
+
+The release also has `equalizer@cloudie-code.github.io.shell-extension.zip`, the extension on its
+own (the same zip that goes to extensions.gnome.org). It only adds the popup: the sound is
+processed by the `gnome-equalizer` service, so install one of the packages above as well.
+
+```bash
+gnome-extensions install equalizer@cloudie-code.github.io.shell-extension.zip
+```
+
+### From source
+
+Dependencies (Arch Linux names): `glib2 pipewire pipewire-pulse wireplumber gtk4 libadwaita
+python python-gobject libpulse gnome-shell` and, to build, `meson`.
 
 For the current user, into `~/.local`:
 
@@ -70,10 +141,7 @@ just dev-setup
 just install-user
 ```
 
-On Wayland, GNOME Shell only sees a newly installed extension after logging out and back in;
-then enable it with `gnome-extensions enable equalizer@cloudie-code.github.io`.
-
-System-wide (or see `packaging/arch/PKGBUILD`):
+System-wide:
 
 ```bash
 meson setup build --prefix=/usr
@@ -85,10 +153,15 @@ meson install -C build
 
 ## Development
 
-| Command             | What it does                                            |
-| ------------------- | ------------------------------------------------------- |
-| `just build-native` | Build into `build/`                                     |
-| `just test`         | DSP tests and desktop/metainfo/schema validation        |
-| `just run-native`   | Run the settings app from `_native/`                    |
-| `just run-daemon`   | Run the audio filter in the foreground                  |
-| `just update-po`    | Regenerate `po/gnome-equalizer.pot` and merge the `.po` |
+| Command               | What it does                                                 |
+| --------------------- | ------------------------------------------------------------ |
+| `just build-native`   | Build into `build/`                                          |
+| `just test`           | DSP tests and desktop/metainfo/schema validation             |
+| `just run-native`     | Run the settings app from `_native/`                         |
+| `just run-daemon`     | Run the audio filter in the foreground                       |
+| `just update-po`      | Regenerate `po/gnome-equalizer.pot` and merge the `.po`      |
+| `just pack-extension` | Pack the extension zip for extensions.gnome.org into `dist/` |
+
+Packaging lives in [`packaging/`](packaging) (`arch/`, `debian/`, `rpm/`, `nix/`, with the
+flake at the root), and the GitHub workflows build every format; pushing a `v*` tag creates a
+draft release with all of them.
