@@ -14,6 +14,10 @@
 </a>
 <br><br>
 <p>A six band equalizer with loudness equalization and bass boost for GNOME.</p>
+<br>
+<img src="data/screenshots/app.png" alt="Equalizer settings" height="520" />
+&nbsp;
+<img src="data/screenshots/popup.png" alt="Equalizer popup next to the volume slider in the system menu" height="520" />
 </div>
 
 ## Features

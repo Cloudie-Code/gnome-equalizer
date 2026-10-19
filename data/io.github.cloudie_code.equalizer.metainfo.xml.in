@@ -23,6 +23,17 @@
     <name translate="no">cloudie-code</name>
   </developer>
 
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Cloudie-Code/gnome-equalizer/main/data/screenshots/app.png</image>
+      <caption>Equalizer settings</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Cloudie-Code/gnome-equalizer/main/data/screenshots/popup.png</image>
+      <caption>The equalizer next to the volume slider in the system menu</caption>
+    </screenshot>
+  </screenshots>
+
   <url type="homepage">https://github.com/cloudie-code/gnome-equalizer</url>
   <url type="bugtracker">https://github.com/cloudie-code/gnome-equalizer/issues</url>
 
