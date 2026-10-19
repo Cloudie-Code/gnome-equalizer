@@ -1,0 +1,21 @@
+.equalizer-bands {
+    padding: 6px 12px 0 12px;
+}
+
+.equalizer-band {
+    spacing: 4px;
+}
+
+.equalizer-slider {
+    height: 136px;
+}
+
+.equalizer-band-value,
+.equalizer-band-label {
+    font-size: 9pt;
+    font-feature-settings: "tnum";
+}
+
+.equalizer-band-value {
+    font-weight: bold;
+}

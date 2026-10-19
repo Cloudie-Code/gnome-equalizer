@@ -1,0 +1,6 @@
+option(
+    'systemd-user-unit-dir',
+    type: 'string',
+    value: '',
+    description: 'Where to install the systemd user unit (default: guessed from the prefix)',
+)

@@ -1,0 +1,16 @@
+[Unit]
+Description=GNOME Equalizer audio filter
+Documentation=https://github.com/cloudie-code/gnome-equalizer
+After=pipewire.service wireplumber.service
+Requires=pipewire.service
+PartOf=pipewire.service
+
+[Service]
+Type=simple
+ExecStart=@libexecdir@/gnome-equalizer-daemon
+Restart=on-failure
+RestartSec=2
+Slice=session.slice
+
+[Install]
+WantedBy=pipewire.service

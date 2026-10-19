@@ -1,0 +1,25 @@
+# Meson build output
+/build/
+/_build/
+/_native/
+/meson-logs/
+/meson-private/
+
+# Python cache and virtualenvs
+__pycache__/
+*.py[cod]
+/.venv/
+/.ruff_cache/
+
+# Translations
+*.mo
+
+# Editor and local workspace files
+/.vscode/
+/.idea/
+
+# Temporary and backup files
+*~
+*.swp
+.DS_Store
+*.zip

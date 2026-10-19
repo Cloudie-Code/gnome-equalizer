@@ -1,0 +1,26 @@
+# Maintainer: cloudie-code
+pkgname=gnome-equalizer
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Six band equalizer with loudness equalization and bass boost for GNOME"
+arch=('x86_64' 'aarch64')
+url="https://github.com/cloudie-code/gnome-equalizer"
+license=('GPL-3.0-or-later')
+depends=('glib2' 'pipewire' 'wireplumber' 'gtk4' 'libadwaita' 'python' 'python-gobject'
+         'libpulse' 'gnome-shell>=1:51')
+makedepends=('meson' 'appstream' 'desktop-file-utils')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  arch-meson "$pkgname-$pkgver" build
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gnome-equalizer">
+  <schema id="io.github.cloudie_code.equalizer" path="/io/github/cloudie_code/equalizer/">
+    <key name="enabled" type="b">
+      <default>true</default>
+      <summary>Apply the equalizer</summary>
+      <description>Whether the equalizer processes the sound of the default output device. When off, the sound passes through unchanged.</description>
+    </key>
+    <key name="bands" type="ad">
+      <default>[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</default>
+      <summary>Band gains</summary>
+      <description>Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz and 15 kHz bands.</description>
+    </key>
+    <key name="preset" type="s">
+      <default>'flat'</default>
+      <summary>Preset</summary>
+      <description>Identifier of the preset the band gains were taken from, or “custom”.</description>
+    </key>
+    <key name="loudness-equalization" type="b">
+      <default>false</default>
+      <summary>Loudness equalization</summary>
+      <description>Evens out the perceived volume, so quiet passages are raised and loud ones are lowered.</description>
+    </key>
+    <key name="bass-boost" type="b">
+      <default>false</default>
+      <summary>Bass boost</summary>
+      <description>Boosts the lowest frequencies with a low shelf filter.</description>
+    </key>
+    <key name="bass-boost-level" type="d">
+      <range min="1.0" max="12.0"/>
+      <default>6.0</default>
+      <summary>Bass boost level</summary>
+      <description>How much the bass boost raises the low frequencies, in decibels.</description>
+    </key>
+  </schema>
+</schemalist>

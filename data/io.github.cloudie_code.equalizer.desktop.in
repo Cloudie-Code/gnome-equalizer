@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Equalizer
+GenericName=Sound Equalizer
+Comment=Adjust bass, treble, loudness equalization and bass boost of the sound output
+Exec=@bindir@/gnome-equalizer
+Icon=io.github.cloudie_code.equalizer
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;Settings;AudioVideo;Audio;
+# Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+Keywords=equalizer;sound;audio;bass;treble;loudness;volume;
+StartupNotify=true

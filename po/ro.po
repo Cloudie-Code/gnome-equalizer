@@ -1,0 +1,240 @@
+# Romanian translation for GNOME Equalizer.
+# Copyright (C) 2026 cloudie-code
+# This file is distributed under the same license as the gnome-equalizer package.
+# cloudie-code, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-equalizer\n"
+"Report-Msgid-Bugs-To: https://github.com/cloudie-code/gnome-equalizer/issues\n"
+"POT-Creation-Date: 2026-10-19 15:32-0300\n"
+"PO-Revision-Date: 2026-10-19 15:45-0300\n"
+"Last-Translator: cloudie-code\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:2
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:7 daemon/main.c:191
+#: extension/extension.js:184 extension/extension.js:262 src/main.py:66
+#: src/window.py:35 src/window.py:91 src/window.py:99
+msgid "Equalizer"
+msgstr "Egalizator"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:3
+msgid "Sound Equalizer"
+msgstr "Egalizator de sunet"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:4
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:8
+msgid ""
+"Adjust bass, treble, loudness equalization and bass boost of the sound output"
+msgstr "Ajustați basul, înaltele, egalizarea volumului și amplificarea basului pentru ieșirea de sunet"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/io.github.cloudie_code.equalizer.desktop.in:11
+msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
+msgstr "egalizator;sunet;audio;bas;înalte;volum;intensitate;equalizer;"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: extension/extension.js:191
+msgid "Apply the equalizer"
+msgstr "Aplică egalizatorul"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+msgid ""
+"Whether the equalizer processes the sound of the default output device. When "
+"off, the sound passes through unchanged."
+msgstr "Dacă egalizatorul procesează sunetul dispozitivului de ieșire implicit. Când este dezactivat, sunetul trece nemodificat."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+msgid "Band gains"
+msgstr "Amplificările benzilor"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+msgid ""
+"Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
+"and 15 kHz bands."
+msgstr "Amplificarea în decibeli (de la −12 la +12) a benzilor de 60 Hz, 180 Hz, 550 Hz, 1,6 kHz, 5 kHz și 15 kHz."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: extension/extension.js:206 src/window.py:107
+msgid "Preset"
+msgstr "Presetare"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+msgid "Identifier of the preset the band gains were taken from, or “custom”."
+msgstr "Identificatorul presetării din care provin amplificările benzilor sau „custom”."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+msgid "Loudness equalization"
+msgstr "Egalizarea volumului"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+msgid ""
+"Evens out the perceived volume, so quiet passages are raised and loud ones "
+"are lowered."
+msgstr "Uniformizează volumul perceput: pasajele încete sunt ridicate, iar cele puternice coborâte."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
+msgid "Bass boost"
+msgstr "Amplificare bas"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+msgid "Boosts the lowest frequencies with a low shelf filter."
+msgstr "Amplifică frecvențele cele mai joase cu un filtru de raft jos."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+msgid "Bass boost level"
+msgstr "Nivelul amplificării basului"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+msgid "How much the bass boost raises the low frequencies, in decibels."
+msgstr "Cât de mult ridică amplificarea basului frecvențele joase, în decibeli."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:10
+msgid ""
+"Equalizer shapes the sound of whatever output device you pick in GNOME, and "
+"follows you when you switch from the speakers to headphones."
+msgstr "Egalizator modelează sunetul oricărui dispozitiv de ieșire ales în GNOME și vă urmează când treceți de la difuzoare la căști."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:15
+msgid "Six band equalizer from 60 Hz to 15 kHz, −12 to +12 dB, with presets"
+msgstr "Egalizator cu șase benzi de la 60 Hz la 15 kHz, de la −12 la +12 dB, cu presetări"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:16
+msgid "Loudness equalization, which evens out quiet and loud passages"
+msgstr "Egalizarea volumului, care uniformizează pasajele încete și puternice"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:18
+msgid "An equalizer button next to the volume slider in the system menu"
+msgstr "Un buton de egalizator lângă glisorul de volum din meniul sistemului"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:44
+msgid "First release."
+msgstr "Prima versiune."
+
+#. Translators: accessible name of an equalizer slider, %s is a frequency like “1.6k”
+#: extension/extension.js:55 src/bands.py:67
+#, python-format, javascript-format
+msgid "%s Hz"
+msgstr "%s Hz"
+
+#: extension/extension.js:169
+msgid "Open equalizer"
+msgstr "Deschide egalizatorul"
+
+#: extension/extension.js:219 src/window.py:125
+msgid "Loudness Equalization"
+msgstr "Egalizarea volumului"
+
+#: extension/extension.js:224 src/window.py:133
+msgid "Bass Boost"
+msgstr "Amplificare bas"
+
+#: extension/extension.js:230
+msgid "Equalizer Settings"
+msgstr "Configurări egalizator"
+
+#: extension/extension.js:260 src/window.py:106
+msgid "Custom"
+msgstr "Personalizat"
+
+#: extension/presets.js:14 src/presets.py:32
+msgid "Flat"
+msgstr "Plat"
+
+#: extension/presets.js:15 src/presets.py:33
+msgid "Bass"
+msgstr "Bas"
+
+#: extension/presets.js:16 src/presets.py:34
+msgid "Treble"
+msgstr "Înalte"
+
+#: extension/presets.js:17 src/presets.py:35
+msgid "Vocal"
+msgstr "Voce"
+
+#: extension/presets.js:18 src/presets.py:36
+msgid "Rock"
+msgstr "Rock"
+
+#: extension/presets.js:19 src/presets.py:37
+msgid "Pop"
+msgstr "Pop"
+
+#: extension/presets.js:20 src/presets.py:38
+msgid "Jazz"
+msgstr "Jazz"
+
+#: extension/presets.js:21 src/presets.py:39
+msgid "Classical"
+msgstr "Clasică"
+
+#: extension/presets.js:22 src/presets.py:40
+msgid "Electronic"
+msgstr "Electronică"
+
+#. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
+#: src/main.py:74
+msgid "translator-credits"
+msgstr "cloudie-code"
+
+#: src/window.py:51
+msgid "_About Equalizer"
+msgstr "_Despre Egalizator"
+
+#: src/window.py:53
+msgid "Main Menu"
+msgstr "Meniu principal"
+
+#: src/window.py:57
+msgid "The equalizer service is not running"
+msgstr "Serviciul egalizatorului nu rulează"
+
+#: src/window.py:58
+msgid "_Start"
+msgstr "_Pornește"
+
+#: src/window.py:75
+msgid "Output"
+msgstr "Ieșire"
+
+#: src/window.py:77
+msgid "Output Device"
+msgstr "Dispozitiv de ieșire"
+
+#: src/window.py:92
+msgid "Applies to the output device chosen in the system menu"
+msgstr "Se aplică dispozitivului de ieșire ales în meniul sistemului"
+
+#: src/window.py:101
+msgid "_Reset"
+msgstr "_Resetează"
+
+#: src/window.py:122
+msgid "Sound Enhancements"
+msgstr "Îmbunătățiri ale sunetului"
+
+#: src/window.py:126
+msgid ""
+"Evens out the volume, so quiet passages are raised and loud ones lowered"
+msgstr "Uniformizează volumul: pasajele încete sunt ridicate, iar cele puternice coborâte"
+
+#: src/window.py:134
+msgid "Boosts the lowest frequencies"
+msgstr "Amplifică frecvențele cele mai joase"
+
+#: src/window.py:139 src/window.py:143
+msgid "Level"
+msgstr "Nivel"
+
+#: src/window.py:150 src/window.py:153
+#, python-format
+msgid "+%d dB"
+msgstr "+%d dB"

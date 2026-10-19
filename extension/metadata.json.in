@@ -1,0 +1,12 @@
+{
+"shell-version": [
+    "51"
+],
+"uuid": "@uuid@",
+"name": "Equalizer",
+"description": "A six band equalizer with loudness equalization and bass boost for the sound output. Adds an equalizer button next to the volume slider in the system menu.\n\nThe audio processing runs in the gnome-equalizer service, installed with the Equalizer app.",
+"url": "https://github.com/cloudie-code/gnome-equalizer",
+"gettext-domain": "@gettext_domain@",
+"settings-schema": "@schema@",
+"version": 1
+}

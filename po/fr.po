@@ -1,0 +1,240 @@
+# French translation for GNOME Equalizer.
+# Copyright (C) 2026 cloudie-code
+# This file is distributed under the same license as the gnome-equalizer package.
+# cloudie-code, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-equalizer\n"
+"Report-Msgid-Bugs-To: https://github.com/cloudie-code/gnome-equalizer/issues\n"
+"POT-Creation-Date: 2026-10-19 15:32-0300\n"
+"PO-Revision-Date: 2026-10-19 15:45-0300\n"
+"Last-Translator: cloudie-code\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:2
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:7 daemon/main.c:191
+#: extension/extension.js:184 extension/extension.js:262 src/main.py:66
+#: src/window.py:35 src/window.py:91 src/window.py:99
+msgid "Equalizer"
+msgstr "Égaliseur"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:3
+msgid "Sound Equalizer"
+msgstr "Égaliseur audio"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:4
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:8
+msgid ""
+"Adjust bass, treble, loudness equalization and bass boost of the sound output"
+msgstr "Réglez les graves, les aigus, l’égalisation du volume et le renforcement des graves de la sortie audio"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/io.github.cloudie_code.equalizer.desktop.in:11
+msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
+msgstr "égaliseur;son;audio;graves;aigus;volume;intensité;equalizer;"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: extension/extension.js:191
+msgid "Apply the equalizer"
+msgstr "Appliquer l’égaliseur"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+msgid ""
+"Whether the equalizer processes the sound of the default output device. When "
+"off, the sound passes through unchanged."
+msgstr "Indique si l’égaliseur traite le son du périphérique de sortie par défaut. Lorsqu’il est désactivé, le son passe sans modification."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+msgid "Band gains"
+msgstr "Gains des bandes"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+msgid ""
+"Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
+"and 15 kHz bands."
+msgstr "Gain en décibels (−12 à +12) des bandes 60 Hz, 180 Hz, 550 Hz, 1,6 kHz, 5 kHz et 15 kHz."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: extension/extension.js:206 src/window.py:107
+msgid "Preset"
+msgstr "Préréglage"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+msgid "Identifier of the preset the band gains were taken from, or “custom”."
+msgstr "Identifiant du préréglage dont proviennent les gains des bandes, ou « custom »."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+msgid "Loudness equalization"
+msgstr "Égalisation du volume"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+msgid ""
+"Evens out the perceived volume, so quiet passages are raised and loud ones "
+"are lowered."
+msgstr "Uniformise le volume perçu : les passages calmes sont remontés et les passages forts abaissés."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
+msgid "Bass boost"
+msgstr "Renforcement des graves"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+msgid "Boosts the lowest frequencies with a low shelf filter."
+msgstr "Renforce les fréquences les plus basses avec un filtre en plateau bas."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+msgid "Bass boost level"
+msgstr "Niveau du renforcement des graves"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+msgid "How much the bass boost raises the low frequencies, in decibels."
+msgstr "De combien le renforcement des graves remonte les basses fréquences, en décibels."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:10
+msgid ""
+"Equalizer shapes the sound of whatever output device you pick in GNOME, and "
+"follows you when you switch from the speakers to headphones."
+msgstr "Égaliseur façonne le son du périphérique de sortie que vous choisissez dans GNOME et vous suit lorsque vous passez des haut-parleurs au casque."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:15
+msgid "Six band equalizer from 60 Hz to 15 kHz, −12 to +12 dB, with presets"
+msgstr "Égaliseur six bandes de 60 Hz à 15 kHz, de −12 à +12 dB, avec des préréglages"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:16
+msgid "Loudness equalization, which evens out quiet and loud passages"
+msgstr "Égalisation du volume, qui uniformise les passages calmes et forts"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:18
+msgid "An equalizer button next to the volume slider in the system menu"
+msgstr "Un bouton d’égaliseur à côté du curseur de volume dans le menu système"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:44
+msgid "First release."
+msgstr "Première version."
+
+#. Translators: accessible name of an equalizer slider, %s is a frequency like “1.6k”
+#: extension/extension.js:55 src/bands.py:67
+#, python-format, javascript-format
+msgid "%s Hz"
+msgstr "%s Hz"
+
+#: extension/extension.js:169
+msgid "Open equalizer"
+msgstr "Ouvrir l’égaliseur"
+
+#: extension/extension.js:219 src/window.py:125
+msgid "Loudness Equalization"
+msgstr "Égalisation du volume"
+
+#: extension/extension.js:224 src/window.py:133
+msgid "Bass Boost"
+msgstr "Renforcement des graves"
+
+#: extension/extension.js:230
+msgid "Equalizer Settings"
+msgstr "Paramètres de l’égaliseur"
+
+#: extension/extension.js:260 src/window.py:106
+msgid "Custom"
+msgstr "Personnalisé"
+
+#: extension/presets.js:14 src/presets.py:32
+msgid "Flat"
+msgstr "Neutre"
+
+#: extension/presets.js:15 src/presets.py:33
+msgid "Bass"
+msgstr "Graves"
+
+#: extension/presets.js:16 src/presets.py:34
+msgid "Treble"
+msgstr "Aigus"
+
+#: extension/presets.js:17 src/presets.py:35
+msgid "Vocal"
+msgstr "Voix"
+
+#: extension/presets.js:18 src/presets.py:36
+msgid "Rock"
+msgstr "Rock"
+
+#: extension/presets.js:19 src/presets.py:37
+msgid "Pop"
+msgstr "Pop"
+
+#: extension/presets.js:20 src/presets.py:38
+msgid "Jazz"
+msgstr "Jazz"
+
+#: extension/presets.js:21 src/presets.py:39
+msgid "Classical"
+msgstr "Classique"
+
+#: extension/presets.js:22 src/presets.py:40
+msgid "Electronic"
+msgstr "Électronique"
+
+#. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
+#: src/main.py:74
+msgid "translator-credits"
+msgstr "cloudie-code"
+
+#: src/window.py:51
+msgid "_About Equalizer"
+msgstr "À _propos d’Égaliseur"
+
+#: src/window.py:53
+msgid "Main Menu"
+msgstr "Menu principal"
+
+#: src/window.py:57
+msgid "The equalizer service is not running"
+msgstr "Le service de l’égaliseur n’est pas en cours d’exécution"
+
+#: src/window.py:58
+msgid "_Start"
+msgstr "_Démarrer"
+
+#: src/window.py:75
+msgid "Output"
+msgstr "Sortie"
+
+#: src/window.py:77
+msgid "Output Device"
+msgstr "Périphérique de sortie"
+
+#: src/window.py:92
+msgid "Applies to the output device chosen in the system menu"
+msgstr "S’applique au périphérique de sortie choisi dans le menu système"
+
+#: src/window.py:101
+msgid "_Reset"
+msgstr "_Réinitialiser"
+
+#: src/window.py:122
+msgid "Sound Enhancements"
+msgstr "Améliorations du son"
+
+#: src/window.py:126
+msgid ""
+"Evens out the volume, so quiet passages are raised and loud ones lowered"
+msgstr "Uniformise le volume : les passages calmes sont remontés et les passages forts abaissés"
+
+#: src/window.py:134
+msgid "Boosts the lowest frequencies"
+msgstr "Renforce les fréquences les plus basses"
+
+#: src/window.py:139 src/window.py:143
+msgid "Level"
+msgstr "Niveau"
+
+#: src/window.py:150 src/window.py:153
+#, python-format
+msgid "+%d dB"
+msgstr "+%d dB"

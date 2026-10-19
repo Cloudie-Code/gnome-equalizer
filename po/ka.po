@@ -1,0 +1,240 @@
+# Georgian translation for GNOME Equalizer.
+# Copyright (C) 2026 cloudie-code
+# This file is distributed under the same license as the gnome-equalizer package.
+# cloudie-code, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-equalizer\n"
+"Report-Msgid-Bugs-To: https://github.com/cloudie-code/gnome-equalizer/issues\n"
+"POT-Creation-Date: 2026-10-19 15:32-0300\n"
+"PO-Revision-Date: 2026-10-19 15:45-0300\n"
+"Last-Translator: cloudie-code\n"
+"Language-Team: Georgian\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:2
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:7 daemon/main.c:191
+#: extension/extension.js:184 extension/extension.js:262 src/main.py:66
+#: src/window.py:35 src/window.py:91 src/window.py:99
+msgid "Equalizer"
+msgstr "ეკვალაიზერი"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:3
+msgid "Sound Equalizer"
+msgstr "ხმის ეკვალაიზერი"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:4
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:8
+msgid ""
+"Adjust bass, treble, loudness equalization and bass boost of the sound output"
+msgstr "ხმის გამოსავლის დაბალი და მაღალი სიხშირეების, ხმის სიმაღლის გათანაბრებისა და ბასის გაძლიერების მორგება"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/io.github.cloudie_code.equalizer.desktop.in:11
+msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
+msgstr "ეკვალაიზერი;ხმა;აუდიო;ბასი;მაღალი სიხშირეები;ხმის სიმაღლე;equalizer;"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: extension/extension.js:191
+msgid "Apply the equalizer"
+msgstr "ეკვალაიზერის გამოყენება"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+msgid ""
+"Whether the equalizer processes the sound of the default output device. When "
+"off, the sound passes through unchanged."
+msgstr "ამუშავებს თუ არა ეკვალაიზერი ნაგულისხმევი გამოტანის მოწყობილობის ხმას. როცა გამორთულია, ხმა უცვლელად გადის."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+msgid "Band gains"
+msgstr "ზოლების გაძლიერება"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+msgid ""
+"Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
+"and 15 kHz bands."
+msgstr "60 ჰც, 180 ჰც, 550 ჰც, 1,6 კჰც, 5 კჰც და 15 კჰც ზოლების გაძლიერება დეციბელებში (−12-დან +12-მდე)."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: extension/extension.js:206 src/window.py:107
+msgid "Preset"
+msgstr "წინასწარი პარამეტრი"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+msgid "Identifier of the preset the band gains were taken from, or “custom”."
+msgstr "წინასწარი პარამეტრის იდენტიფიკატორი, საიდანაც ზოლების მნიშვნელობებია აღებული, ან „custom“."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+msgid "Loudness equalization"
+msgstr "ხმის სიმაღლის გათანაბრება"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+msgid ""
+"Evens out the perceived volume, so quiet passages are raised and loud ones "
+"are lowered."
+msgstr "ათანაბრებს აღქმულ ხმის სიმაღლეს: წყნარი მონაკვეთები ძლიერდება, ხმამაღალი კი სუსტდება."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
+msgid "Bass boost"
+msgstr "ბასის გაძლიერება"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+msgid "Boosts the lowest frequencies with a low shelf filter."
+msgstr "აძლიერებს ყველაზე დაბალ სიხშირეებს დაბალი თაროს ფილტრით."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+msgid "Bass boost level"
+msgstr "ბასის გაძლიერების დონე"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+msgid "How much the bass boost raises the low frequencies, in decibels."
+msgstr "რამდენად აწევს ბასის გაძლიერება დაბალ სიხშირეებს, დეციბელებში."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:10
+msgid ""
+"Equalizer shapes the sound of whatever output device you pick in GNOME, and "
+"follows you when you switch from the speakers to headphones."
+msgstr "ეკვალაიზერი აყალიბებს GNOME-ში არჩეული გამოტანის მოწყობილობის ხმას და მიგყვებათ, როცა დინამიკებიდან ყურსასმენებზე გადადიხართ."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:15
+msgid "Six band equalizer from 60 Hz to 15 kHz, −12 to +12 dB, with presets"
+msgstr "ექვსზოლიანი ეკვალაიზერი 60 ჰც-დან 15 კჰც-მდე, −12-დან +12 დბ-მდე, წინასწარი პარამეტრებით"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:16
+msgid "Loudness equalization, which evens out quiet and loud passages"
+msgstr "ხმის სიმაღლის გათანაბრება, რომელიც ათანაბრებს წყნარ და ხმამაღალ მონაკვეთებს"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:18
+msgid "An equalizer button next to the volume slider in the system menu"
+msgstr "ეკვალაიზერის ღილაკი ხმის სლაიდერის გვერდით სისტემურ მენიუში"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:44
+msgid "First release."
+msgstr "პირველი გამოცემა."
+
+#. Translators: accessible name of an equalizer slider, %s is a frequency like “1.6k”
+#: extension/extension.js:55 src/bands.py:67
+#, python-format, javascript-format
+msgid "%s Hz"
+msgstr "%s ჰც"
+
+#: extension/extension.js:169
+msgid "Open equalizer"
+msgstr "ეკვალაიზერის გახსნა"
+
+#: extension/extension.js:219 src/window.py:125
+msgid "Loudness Equalization"
+msgstr "ხმის სიმაღლის გათანაბრება"
+
+#: extension/extension.js:224 src/window.py:133
+msgid "Bass Boost"
+msgstr "ბასის გაძლიერება"
+
+#: extension/extension.js:230
+msgid "Equalizer Settings"
+msgstr "ეკვალაიზერის პარამეტრები"
+
+#: extension/extension.js:260 src/window.py:106
+msgid "Custom"
+msgstr "მორგებული"
+
+#: extension/presets.js:14 src/presets.py:32
+msgid "Flat"
+msgstr "ბრტყელი"
+
+#: extension/presets.js:15 src/presets.py:33
+msgid "Bass"
+msgstr "ბასი"
+
+#: extension/presets.js:16 src/presets.py:34
+msgid "Treble"
+msgstr "მაღალი"
+
+#: extension/presets.js:17 src/presets.py:35
+msgid "Vocal"
+msgstr "ვოკალი"
+
+#: extension/presets.js:18 src/presets.py:36
+msgid "Rock"
+msgstr "როკი"
+
+#: extension/presets.js:19 src/presets.py:37
+msgid "Pop"
+msgstr "პოპი"
+
+#: extension/presets.js:20 src/presets.py:38
+msgid "Jazz"
+msgstr "ჯაზი"
+
+#: extension/presets.js:21 src/presets.py:39
+msgid "Classical"
+msgstr "კლასიკა"
+
+#: extension/presets.js:22 src/presets.py:40
+msgid "Electronic"
+msgstr "ელექტრონული"
+
+#. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
+#: src/main.py:74
+msgid "translator-credits"
+msgstr "cloudie-code"
+
+#: src/window.py:51
+msgid "_About Equalizer"
+msgstr "_ეკვალაიზერის შესახებ"
+
+#: src/window.py:53
+msgid "Main Menu"
+msgstr "მთავარი მენიუ"
+
+#: src/window.py:57
+msgid "The equalizer service is not running"
+msgstr "ეკვალაიზერის სერვისი გაშვებული არაა"
+
+#: src/window.py:58
+msgid "_Start"
+msgstr "_გაშვება"
+
+#: src/window.py:75
+msgid "Output"
+msgstr "გამოსავალი"
+
+#: src/window.py:77
+msgid "Output Device"
+msgstr "გამოტანის მოწყობილობა"
+
+#: src/window.py:92
+msgid "Applies to the output device chosen in the system menu"
+msgstr "ვრცელდება სისტემურ მენიუში არჩეულ გამოტანის მოწყობილობაზე"
+
+#: src/window.py:101
+msgid "_Reset"
+msgstr "_ჩამოყრა"
+
+#: src/window.py:122
+msgid "Sound Enhancements"
+msgstr "ხმის გაუმჯობესებები"
+
+#: src/window.py:126
+msgid ""
+"Evens out the volume, so quiet passages are raised and loud ones lowered"
+msgstr "ათანაბრებს ხმის სიმაღლეს: წყნარი მონაკვეთები ძლიერდება, ხმამაღალი კი სუსტდება"
+
+#: src/window.py:134
+msgid "Boosts the lowest frequencies"
+msgstr "აძლიერებს ყველაზე დაბალ სიხშირეებს"
+
+#: src/window.py:139 src/window.py:143
+msgid "Level"
+msgstr "დონე"
+
+#: src/window.py:150 src/window.py:153
+#, python-format
+msgid "+%d dB"
+msgstr "+%d დბ"

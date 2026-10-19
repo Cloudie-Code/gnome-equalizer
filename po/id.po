@@ -1,0 +1,240 @@
+# Indonesian translation for GNOME Equalizer.
+# Copyright (C) 2026 cloudie-code
+# This file is distributed under the same license as the gnome-equalizer package.
+# cloudie-code, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-equalizer\n"
+"Report-Msgid-Bugs-To: https://github.com/cloudie-code/gnome-equalizer/issues\n"
+"POT-Creation-Date: 2026-10-19 15:32-0300\n"
+"PO-Revision-Date: 2026-10-19 15:45-0300\n"
+"Last-Translator: cloudie-code\n"
+"Language-Team: Indonesian\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:2
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:7 daemon/main.c:191
+#: extension/extension.js:184 extension/extension.js:262 src/main.py:66
+#: src/window.py:35 src/window.py:91 src/window.py:99
+msgid "Equalizer"
+msgstr "Ekualiser"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:3
+msgid "Sound Equalizer"
+msgstr "Ekualiser Suara"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:4
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:8
+msgid ""
+"Adjust bass, treble, loudness equalization and bass boost of the sound output"
+msgstr "Atur bass, treble, penyetaraan kenyaringan, dan penguat bass keluaran suara"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/io.github.cloudie_code.equalizer.desktop.in:11
+msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
+msgstr "ekualiser;equalizer;suara;audio;bass;treble;kenyaringan;volume;"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: extension/extension.js:191
+msgid "Apply the equalizer"
+msgstr "Terapkan ekualiser"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+msgid ""
+"Whether the equalizer processes the sound of the default output device. When "
+"off, the sound passes through unchanged."
+msgstr "Apakah ekualiser memproses suara perangkat keluaran baku. Bila mati, suara diteruskan tanpa diubah."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+msgid "Band gains"
+msgstr "Penguatan pita"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+msgid ""
+"Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
+"and 15 kHz bands."
+msgstr "Penguatan dalam desibel (−12 sampai +12) untuk pita 60 Hz, 180 Hz, 550 Hz, 1,6 kHz, 5 kHz, dan 15 kHz."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: extension/extension.js:206 src/window.py:107
+msgid "Preset"
+msgstr "Prasetel"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+msgid "Identifier of the preset the band gains were taken from, or “custom”."
+msgstr "Pengenal prasetel asal nilai penguatan pita, atau “custom”."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+msgid "Loudness equalization"
+msgstr "Penyetaraan kenyaringan"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+msgid ""
+"Evens out the perceived volume, so quiet passages are raised and loud ones "
+"are lowered."
+msgstr "Meratakan volume yang terdengar, sehingga bagian pelan dinaikkan dan bagian keras diturunkan."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
+msgid "Bass boost"
+msgstr "Penguat bass"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+msgid "Boosts the lowest frequencies with a low shelf filter."
+msgstr "Menguatkan frekuensi terendah dengan filter rak rendah."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+msgid "Bass boost level"
+msgstr "Tingkat penguat bass"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+msgid "How much the bass boost raises the low frequencies, in decibels."
+msgstr "Seberapa besar penguat bass menaikkan frekuensi rendah, dalam desibel."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:10
+msgid ""
+"Equalizer shapes the sound of whatever output device you pick in GNOME, and "
+"follows you when you switch from the speakers to headphones."
+msgstr "Ekualiser membentuk suara perangkat keluaran apa pun yang Anda pilih di GNOME, dan mengikuti Anda saat beralih dari pengeras suara ke headphone."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:15
+msgid "Six band equalizer from 60 Hz to 15 kHz, −12 to +12 dB, with presets"
+msgstr "Ekualiser enam pita dari 60 Hz hingga 15 kHz, −12 sampai +12 dB, dengan prasetel"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:16
+msgid "Loudness equalization, which evens out quiet and loud passages"
+msgstr "Penyetaraan kenyaringan, yang meratakan bagian pelan dan keras"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:18
+msgid "An equalizer button next to the volume slider in the system menu"
+msgstr "Tombol ekualiser di samping penggeser volume pada menu sistem"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:44
+msgid "First release."
+msgstr "Rilis pertama."
+
+#. Translators: accessible name of an equalizer slider, %s is a frequency like “1.6k”
+#: extension/extension.js:55 src/bands.py:67
+#, python-format, javascript-format
+msgid "%s Hz"
+msgstr "%s Hz"
+
+#: extension/extension.js:169
+msgid "Open equalizer"
+msgstr "Buka ekualiser"
+
+#: extension/extension.js:219 src/window.py:125
+msgid "Loudness Equalization"
+msgstr "Penyetaraan Kenyaringan"
+
+#: extension/extension.js:224 src/window.py:133
+msgid "Bass Boost"
+msgstr "Penguat Bass"
+
+#: extension/extension.js:230
+msgid "Equalizer Settings"
+msgstr "Pengaturan Ekualiser"
+
+#: extension/extension.js:260 src/window.py:106
+msgid "Custom"
+msgstr "Ubahan"
+
+#: extension/presets.js:14 src/presets.py:32
+msgid "Flat"
+msgstr "Datar"
+
+#: extension/presets.js:15 src/presets.py:33
+msgid "Bass"
+msgstr "Bass"
+
+#: extension/presets.js:16 src/presets.py:34
+msgid "Treble"
+msgstr "Treble"
+
+#: extension/presets.js:17 src/presets.py:35
+msgid "Vocal"
+msgstr "Vokal"
+
+#: extension/presets.js:18 src/presets.py:36
+msgid "Rock"
+msgstr "Rock"
+
+#: extension/presets.js:19 src/presets.py:37
+msgid "Pop"
+msgstr "Pop"
+
+#: extension/presets.js:20 src/presets.py:38
+msgid "Jazz"
+msgstr "Jazz"
+
+#: extension/presets.js:21 src/presets.py:39
+msgid "Classical"
+msgstr "Klasik"
+
+#: extension/presets.js:22 src/presets.py:40
+msgid "Electronic"
+msgstr "Elektronik"
+
+#. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
+#: src/main.py:74
+msgid "translator-credits"
+msgstr "cloudie-code"
+
+#: src/window.py:51
+msgid "_About Equalizer"
+msgstr "Tent_ang Ekualiser"
+
+#: src/window.py:53
+msgid "Main Menu"
+msgstr "Menu Utama"
+
+#: src/window.py:57
+msgid "The equalizer service is not running"
+msgstr "Layanan ekualiser tidak berjalan"
+
+#: src/window.py:58
+msgid "_Start"
+msgstr "_Mulai"
+
+#: src/window.py:75
+msgid "Output"
+msgstr "Keluaran"
+
+#: src/window.py:77
+msgid "Output Device"
+msgstr "Perangkat Keluaran"
+
+#: src/window.py:92
+msgid "Applies to the output device chosen in the system menu"
+msgstr "Berlaku untuk perangkat keluaran yang dipilih di menu sistem"
+
+#: src/window.py:101
+msgid "_Reset"
+msgstr "_Atur Ulang"
+
+#: src/window.py:122
+msgid "Sound Enhancements"
+msgstr "Peningkatan Suara"
+
+#: src/window.py:126
+msgid ""
+"Evens out the volume, so quiet passages are raised and loud ones lowered"
+msgstr "Meratakan volume, sehingga bagian pelan dinaikkan dan bagian keras diturunkan"
+
+#: src/window.py:134
+msgid "Boosts the lowest frequencies"
+msgstr "Menguatkan frekuensi terendah"
+
+#: src/window.py:139 src/window.py:143
+msgid "Level"
+msgstr "Tingkat"
+
+#: src/window.py:150 src/window.py:153
+#, python-format
+msgid "+%d dB"
+msgstr "+%d dB"

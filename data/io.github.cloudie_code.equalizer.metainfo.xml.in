@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.cloudie_code.equalizer</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>Equalizer</name>
+  <summary>Adjust bass, treble, loudness equalization and bass boost of the sound output</summary>
+  <description>
+    <p>
+      Equalizer shapes the sound of whatever output device you pick in GNOME,
+      and follows you when you switch from the speakers to headphones.
+    </p>
+    <ul>
+      <li>Six band equalizer from 60 Hz to 15 kHz, −12 to +12 dB, with presets</li>
+      <li>Loudness equalization, which evens out quiet and loud passages</li>
+      <li>Bass boost</li>
+      <li>An equalizer button next to the volume slider in the system menu</li>
+    </ul>
+  </description>
+
+  <developer id="github.cloudie-code">
+    <name translate="no">cloudie-code</name>
+  </developer>
+
+  <url type="homepage">https://github.com/cloudie-code/gnome-equalizer</url>
+  <url type="bugtracker">https://github.com/cloudie-code/gnome-equalizer/issues</url>
+
+  <translation type="gettext">gnome-equalizer</translation>
+  <launchable type="desktop-id">io.github.cloudie_code.equalizer.desktop</launchable>
+  <content_rating type="oars-1.1" />
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#f9a8c9</color>
+    <color type="primary" scheme_preference="dark">#8f2d56</color>
+  </branding>
+
+  <releases>
+    <release version="0.1.0" date="2026-10-19">
+      <description>
+        <p>First release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

@@ -1,0 +1,240 @@
+# Czech translation for GNOME Equalizer.
+# Copyright (C) 2026 cloudie-code
+# This file is distributed under the same license as the gnome-equalizer package.
+# cloudie-code, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-equalizer\n"
+"Report-Msgid-Bugs-To: https://github.com/cloudie-code/gnome-equalizer/issues\n"
+"POT-Creation-Date: 2026-10-19 15:32-0300\n"
+"PO-Revision-Date: 2026-10-19 15:45-0300\n"
+"Last-Translator: cloudie-code\n"
+"Language-Team: Czech\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:2
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:7 daemon/main.c:191
+#: extension/extension.js:184 extension/extension.js:262 src/main.py:66
+#: src/window.py:35 src/window.py:91 src/window.py:99
+msgid "Equalizer"
+msgstr "Ekvalizér"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:3
+msgid "Sound Equalizer"
+msgstr "Zvukový ekvalizér"
+
+#: data/io.github.cloudie_code.equalizer.desktop.in:4
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:8
+msgid ""
+"Adjust bass, treble, loudness equalization and bass boost of the sound output"
+msgstr "Upravte basy, výšky, vyrovnání hlasitosti a zesílení basů zvukového výstupu"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/io.github.cloudie_code.equalizer.desktop.in:11
+msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
+msgstr "ekvalizér;zvuk;audio;basy;výšky;hlasitost;equalizer;"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: extension/extension.js:191
+msgid "Apply the equalizer"
+msgstr "Použít ekvalizér"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+msgid ""
+"Whether the equalizer processes the sound of the default output device. When "
+"off, the sound passes through unchanged."
+msgstr "Zda ekvalizér zpracovává zvuk výchozího výstupního zařízení. Když je vypnutý, zvuk prochází beze změny."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+msgid "Band gains"
+msgstr "Zesílení pásem"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+msgid ""
+"Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
+"and 15 kHz bands."
+msgstr "Zesílení v decibelech (−12 až +12) pásem 60 Hz, 180 Hz, 550 Hz, 1,6 kHz, 5 kHz a 15 kHz."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: extension/extension.js:206 src/window.py:107
+msgid "Preset"
+msgstr "Předvolba"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+msgid "Identifier of the preset the band gains were taken from, or “custom”."
+msgstr "Identifikátor předvolby, ze které pochází zesílení pásem, nebo „custom“."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+msgid "Loudness equalization"
+msgstr "Vyrovnání hlasitosti"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+msgid ""
+"Evens out the perceived volume, so quiet passages are raised and loud ones "
+"are lowered."
+msgstr "Vyrovnává vnímanou hlasitost, takže tiché pasáže jsou zesíleny a hlasité zeslabeny."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
+msgid "Bass boost"
+msgstr "Zesílení basů"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+msgid "Boosts the lowest frequencies with a low shelf filter."
+msgstr "Zesiluje nejnižší frekvence pomocí filtru typu low shelf."
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+msgid "Bass boost level"
+msgstr "Úroveň zesílení basů"
+
+#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+msgid "How much the bass boost raises the low frequencies, in decibels."
+msgstr "O kolik zesílení basů zvedne nízké frekvence, v decibelech."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:10
+msgid ""
+"Equalizer shapes the sound of whatever output device you pick in GNOME, and "
+"follows you when you switch from the speakers to headphones."
+msgstr "Ekvalizér upravuje zvuk výstupního zařízení, které zvolíte v GNOME, a následuje vás, když přepnete z reproduktorů na sluchátka."
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:15
+msgid "Six band equalizer from 60 Hz to 15 kHz, −12 to +12 dB, with presets"
+msgstr "Šestipásmový ekvalizér od 60 Hz do 15 kHz, −12 až +12 dB, s předvolbami"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:16
+msgid "Loudness equalization, which evens out quiet and loud passages"
+msgstr "Vyrovnání hlasitosti, které vyrovnává tiché a hlasité pasáže"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:18
+msgid "An equalizer button next to the volume slider in the system menu"
+msgstr "Tlačítko ekvalizéru vedle posuvníku hlasitosti v systémové nabídce"
+
+#: data/io.github.cloudie_code.equalizer.metainfo.xml.in:44
+msgid "First release."
+msgstr "První vydání."
+
+#. Translators: accessible name of an equalizer slider, %s is a frequency like “1.6k”
+#: extension/extension.js:55 src/bands.py:67
+#, python-format, javascript-format
+msgid "%s Hz"
+msgstr "%s Hz"
+
+#: extension/extension.js:169
+msgid "Open equalizer"
+msgstr "Otevřít ekvalizér"
+
+#: extension/extension.js:219 src/window.py:125
+msgid "Loudness Equalization"
+msgstr "Vyrovnání hlasitosti"
+
+#: extension/extension.js:224 src/window.py:133
+msgid "Bass Boost"
+msgstr "Zesílení basů"
+
+#: extension/extension.js:230
+msgid "Equalizer Settings"
+msgstr "Nastavení ekvalizéru"
+
+#: extension/extension.js:260 src/window.py:106
+msgid "Custom"
+msgstr "Vlastní"
+
+#: extension/presets.js:14 src/presets.py:32
+msgid "Flat"
+msgstr "Rovný"
+
+#: extension/presets.js:15 src/presets.py:33
+msgid "Bass"
+msgstr "Basy"
+
+#: extension/presets.js:16 src/presets.py:34
+msgid "Treble"
+msgstr "Výšky"
+
+#: extension/presets.js:17 src/presets.py:35
+msgid "Vocal"
+msgstr "Vokály"
+
+#: extension/presets.js:18 src/presets.py:36
+msgid "Rock"
+msgstr "Rock"
+
+#: extension/presets.js:19 src/presets.py:37
+msgid "Pop"
+msgstr "Pop"
+
+#: extension/presets.js:20 src/presets.py:38
+msgid "Jazz"
+msgstr "Jazz"
+
+#: extension/presets.js:21 src/presets.py:39
+msgid "Classical"
+msgstr "Klasika"
+
+#: extension/presets.js:22 src/presets.py:40
+msgid "Electronic"
+msgstr "Elektronika"
+
+#. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
+#: src/main.py:74
+msgid "translator-credits"
+msgstr "cloudie-code"
+
+#: src/window.py:51
+msgid "_About Equalizer"
+msgstr "_O aplikaci Ekvalizér"
+
+#: src/window.py:53
+msgid "Main Menu"
+msgstr "Hlavní nabídka"
+
+#: src/window.py:57
+msgid "The equalizer service is not running"
+msgstr "Služba ekvalizéru neběží"
+
+#: src/window.py:58
+msgid "_Start"
+msgstr "_Spustit"
+
+#: src/window.py:75
+msgid "Output"
+msgstr "Výstup"
+
+#: src/window.py:77
+msgid "Output Device"
+msgstr "Výstupní zařízení"
+
+#: src/window.py:92
+msgid "Applies to the output device chosen in the system menu"
+msgstr "Platí pro výstupní zařízení zvolené v systémové nabídce"
+
+#: src/window.py:101
+msgid "_Reset"
+msgstr "_Obnovit"
+
+#: src/window.py:122
+msgid "Sound Enhancements"
+msgstr "Vylepšení zvuku"
+
+#: src/window.py:126
+msgid ""
+"Evens out the volume, so quiet passages are raised and loud ones lowered"
+msgstr "Vyrovnává hlasitost, takže tiché pasáže jsou zesíleny a hlasité zeslabeny"
+
+#: src/window.py:134
+msgid "Boosts the lowest frequencies"
+msgstr "Zesiluje nejnižší frekvence"
+
+#: src/window.py:139 src/window.py:143
+msgid "Level"
+msgstr "Úroveň"
+
+#: src/window.py:150 src/window.py:153
+#, python-format
+msgid "+%d dB"
+msgstr "+%d dB"

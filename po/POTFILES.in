@@ -1,0 +1,13 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/io.github.cloudie_code.equalizer.desktop.in
+data/io.github.cloudie_code.equalizer.gschema.xml
+data/io.github.cloudie_code.equalizer.metainfo.xml.in
+daemon/main.c
+extension/extension.js
+extension/presets.js
+src/bands.py
+src/main.py
+src/output.py
+src/presets.py
+src/window.py
