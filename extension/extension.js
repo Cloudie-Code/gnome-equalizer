@@ -128,6 +128,14 @@ export default class EqualizerExtension extends Extension {
         this._menu?.close({animate: false});
         this._menu?.destroy();
         this._menu = null;
+        if (this._outputMenu) {
+            Object.defineProperty(this._output, 'menu', {
+                configurable: true,
+                writable: true,
+                value: this._outputMenu,
+            });
+            this._outputMenu = null;
+        }
         this._menuManager = null;
         this._button?.destroy();
         this._button = null;
@@ -239,6 +247,15 @@ export default class EqualizerExtension extends Extension {
                 this._button.add_style_pseudo_class('checked');
             else
                 this._button.remove_style_pseudo_class('checked');
+        });
+
+        // The grid only makes room under a row whose item's `menu` is visible,
+        // so while this popup is shown the volume slider reports it as its menu:
+        // the rows below move down exactly like with the output device menu.
+        this._outputMenu = this._output.menu;
+        Object.defineProperty(this._output, 'menu', {
+            configurable: true,
+            get: () => (this._menu?.actor.visible ? this._menu : this._outputMenu),
         });
 
         this._menuManager = new PopupMenu.PopupMenuManager(this._output);
