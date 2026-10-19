@@ -2,6 +2,9 @@
 /build/
 /_build/
 /_native/
+/_pack/
+/dist/
+/result
 /meson-logs/
 /meson-private/
 

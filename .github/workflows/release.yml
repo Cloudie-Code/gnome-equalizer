@@ -1,0 +1,78 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Tag name for the release (e.g., v0.1.0)"
+        default: "v0.1.0"
+
+jobs:
+  deb:
+    uses: ./.github/workflows/build-deb.yml
+  rpm:
+    uses: ./.github/workflows/build-rpm.yml
+  arch:
+    uses: ./.github/workflows/build-arch.yml
+  nix:
+    uses: ./.github/workflows/build-nix.yml
+  extension:
+    uses: ./.github/workflows/build-extension.yml
+
+  release:
+    name: Create Release
+    needs: [deb, rpm, arch, nix, extension]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - name: Generate release notes
+        run: |
+          TAG="${{ github.event.inputs.tag_name || github.ref_name }}"
+          cat << EOF > release_body.md
+          ## Equalizer ${TAG}
+          ### Installation
+          **Arch Linux**
+          \`\`\`sh
+          sudo pacman -U gnome-equalizer-*.pkg.tar.zst
+          \`\`\`
+          **Debian / Ubuntu**
+          \`\`\`sh
+          sudo apt install ./gnome-equalizer_*.deb
+          \`\`\`
+          **Fedora**
+          \`\`\`sh
+          sudo dnf install ./gnome-equalizer-*.x86_64.rpm
+          \`\`\`
+          **Nix**
+          \`\`\`sh
+          nix profile install github:cloudie-code/gnome-equalizer/${TAG}
+          \`\`\`
+          Then log out and back in, and run \`gnome-extensions enable equalizer@cloudie-code.github.io\`.
+
+          The \`.shell-extension.zip\` is the extension alone, for extensions.gnome.org; it needs the audio filter from one of the packages above.
+          ### SHA256 Checksums
+          | File | SHA256 Checksum |
+          |------|-----------------|
+          EOF
+          for f in $(find . -type f \( -name '*.deb' -o -name '*.rpm' -o -name '*.pkg.tar.zst' -o -name '*.zip' \)); do
+            echo "| \`$(basename "$f")\` | \`$(sha256sum "$f" | cut -d' ' -f1)\` |" >> release_body.md
+          done
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
+          name: Equalizer ${{ github.event.inputs.tag_name || github.ref_name }}
+          draft: true
+          body_path: release_body.md
+          files: |
+            **/*.deb
+            **/*.rpm
+            **/*.pkg.tar.zst
+            **/*.shell-extension.zip

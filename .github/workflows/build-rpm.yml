@@ -1,0 +1,32 @@
+name: Build RPM
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  rpm:
+    name: RPM
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Install build tools
+        run: dnf install -y rpm-build rpmdevtools dnf-plugins-core git
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build RPM
+        run: |
+          git config --global --add safe.directory '*'
+          VERSION=$(rpmspec -q --srpm --queryformat='%{version}' packaging/rpm/gnome-equalizer.spec)
+          mkdir -p ~/rpmbuild/SOURCES
+          git archive --format=tar.gz --prefix="gnome-equalizer-${VERSION}/" \
+            -o ~/rpmbuild/SOURCES/gnome-equalizer-${VERSION}.tar.gz HEAD
+          dnf builddep -y packaging/rpm/gnome-equalizer.spec
+          rpmbuild -ba packaging/rpm/gnome-equalizer.spec
+      - name: Upload RPM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gnome-equalizer-rpm
+          path: |
+            ~/rpmbuild/RPMS/**/*.rpm
+            ~/rpmbuild/SRPMS/*.rpm

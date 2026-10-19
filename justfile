@@ -37,7 +37,7 @@ update-po: build-native
 
 # Clean build directories
 clean:
-    rm -rf _build build _native
+    rm -rf _build build _native _pack dist
 
 # Install for the current user into ~/.local and start the filter
 install-user:
@@ -54,3 +54,14 @@ uninstall-user:
     ninja -C _build uninstall
     rm -rf "$HOME/.local/share/gnome-shell/extensions/equalizer@cloudie-code.github.io"
     systemctl --user daemon-reload
+
+# Pack the GNOME Shell extension for extensions.gnome.org into dist/
+pack-extension:
+    rm -rf _pack dist/extension
+    .venv/bin/meson setup _pack --prefix=/usr
+    DESTDIR="{{justfile_directory()}}/dist/extension" .venv/bin/meson install -C _pack --quiet
+    mkdir -p dist
+    rm -f "dist/equalizer@cloudie-code.github.io.shell-extension.zip"
+    cd "dist/extension/usr/share/gnome-shell/extensions/equalizer@cloudie-code.github.io" && rm -f schemas/gschemas.compiled && zip -qr "{{justfile_directory()}}/dist/equalizer@cloudie-code.github.io.shell-extension.zip" .
+    rm -rf _pack dist/extension
+    @echo "dist/equalizer@cloudie-code.github.io.shell-extension.zip"

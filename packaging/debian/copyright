@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: gnome-equalizer
+Source: https://github.com/cloudie-code/gnome-equalizer
+
+Files: *
+Copyright: 2026 cloudie-code
+License: GPL-3.0+

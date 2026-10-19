@@ -1,0 +1,48 @@
+Source: gnome-equalizer
+Section: sound
+Priority: optional
+Maintainer: cloudie-code <344364031+Cloudie-Code@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13),
+               meson (>= 1.0.0),
+               ninja-build,
+               pkgconf,
+               gettext,
+               desktop-file-utils,
+               appstream,
+               libglib2.0-dev (>= 2.80),
+               libglib2.0-dev-bin,
+               libpipewire-0.3-dev (>= 1.0.0),
+               libgtk-4-dev (>= 4.18.0),
+               libadwaita-1-dev (>= 1.7.0),
+               python3
+Standards-Version: 4.7.0
+Homepage: https://github.com/cloudie-code/gnome-equalizer
+Rules-Requires-Root: no
+
+Package: gnome-equalizer
+Architecture: linux-any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         python3,
+         python3-gi,
+         gir1.2-gtk-4.0,
+         gir1.2-adw-1,
+         libgtk-4-1 (>= 4.18.0),
+         libadwaita-1-0 (>= 1.7.0),
+         pipewire (>= 1.0.0),
+         pipewire-pulse,
+         wireplumber (>= 0.5),
+         pulseaudio-utils
+Recommends: gnome-shell
+Description: Six band equalizer with loudness equalization and bass boost for GNOME
+ Equalizer shapes the sound of whatever output device you pick in GNOME,
+ and follows you when you switch from the speakers to headphones.
+ .
+  * Six band equalizer from 60 Hz to 15 kHz, -12 to +12 dB, with presets
+  * Loudness equalization, which evens out quiet and loud passages
+  * Bass boost
+  * An equalizer button next to the volume slider in the system menu
+ .
+ The audio filter runs as a PipeWire smart filter in the
+ gnome-equalizer.service systemd user unit, and the GNOME Shell extension
+ equalizer@cloudie-code.github.io adds the popup to the system menu.

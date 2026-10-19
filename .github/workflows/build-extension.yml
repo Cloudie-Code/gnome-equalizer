@@ -1,0 +1,28 @@
+name: Build extension
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  extension:
+    name: Extension zip
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    steps:
+      - name: Install build tools
+        run: |
+          dnf install -y meson gcc gettext glib2-devel pipewire-devel gtk4-devel \
+            libadwaita-devel python3 zip just
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Pack extension
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q meson ninja
+          just pack-extension
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: gnome-equalizer-extension
+          path: dist/*.shell-extension.zip
