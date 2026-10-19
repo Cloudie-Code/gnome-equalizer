@@ -16,11 +16,20 @@
 #include <pipewire/pipewire.h>
 #include <spa/param/audio/format-utils.h>
 #include <spa/utils/result.h>
+#include <spa/utils/ringbuffer.h>
 
 #include "dsp.h"
 
 #define SCHEMA_ID "io.github.cloudie_code.equalizer"
 #define LINK_GROUP "gnome-equalizer"
+
+/* Frames kept between the two sides; a power of two for the index mask. */
+#define RING_FRAMES 16384
+#define MAX_BLOCK 8192
+
+/* The playback side reads the ring one quantum behind at most; anything
+ * beyond this many quanta is stale and gets skipped. */
+#define MAX_QUEUED_QUANTA 3
 
 struct app {
 	GMainLoop *main_loop;
@@ -40,73 +49,101 @@ struct app {
 	struct eq_params params;
 	_Atomic uint32_t rate;
 	struct eq_dsp dsp;
+
+	/* Processed audio, from the capture side to the playback side. */
+	struct spa_ringbuffer ring;
+	float ring_data[EQ_CHANNELS][RING_FRAMES];
+	float scratch[EQ_CHANNELS][MAX_BLOCK];
 };
 
 static void capture_process(void *data)
 {
 	struct app *app = data;
+	struct pw_buffer *b = pw_stream_dequeue_buffer(app->capture);
 
-	if (pw_stream_trigger_process(app->playback) < 0) {
-		/* The playback side is not ready: recycle what was captured. */
-		struct pw_buffer *b;
-		while ((b = pw_stream_dequeue_buffer(app->capture)) != NULL)
-			pw_stream_queue_buffer(app->capture, b);
-	}
-}
+	if (b == NULL)
+		return;
 
-static void playback_process(void *data)
-{
-	struct app *app = data;
-	struct pw_buffer *in = NULL, *out, *b;
-
-	/* Only the newest capture buffer matters, older ones are returned. */
-	while ((b = pw_stream_dequeue_buffer(app->capture)) != NULL) {
-		if (in != NULL)
-			pw_stream_queue_buffer(app->capture, in);
-		in = b;
-	}
-	out = pw_stream_dequeue_buffer(app->playback);
-
-	if (in != NULL && out != NULL &&
-	    in->buffer->n_datas >= EQ_CHANNELS && out->buffer->n_datas >= EQ_CHANNELS) {
+	if (b->buffer->n_datas >= EQ_CHANNELS) {
 		const float *cin[EQ_CHANNELS];
 		float *cout[EQ_CHANNELS];
-		uint32_t size = UINT32_MAX;
-		int32_t stride = 0;
+		uint32_t size = MAX_BLOCK * sizeof(float);
 
 		for (int i = 0; i < EQ_CHANNELS; i++) {
-			struct spa_data *d = &in->buffer->datas[i];
+			struct spa_data *d = &b->buffer->datas[i];
 			uint32_t offs = SPA_MIN(d->chunk->offset, d->maxsize);
 			cin[i] = SPA_PTROFF(d->data, offs, const float);
+			cout[i] = app->scratch[i];
 			size = SPA_MIN(size, SPA_MIN(d->chunk->size, d->maxsize - offs));
-			stride = SPA_MAX(stride, d->chunk->stride);
 		}
-		for (int i = 0; i < EQ_CHANNELS; i++) {
-			struct spa_data *d = &out->buffer->datas[i];
-			cout[i] = d->data;
-			size = SPA_MIN(size, d->maxsize);
-		}
-		if (out->requested)
-			size = SPA_MIN(size, (uint32_t)(out->requested * sizeof(float)));
+		uint32_t frames = size / sizeof(float);
 
 		uint32_t rate = atomic_load_explicit(&app->rate, memory_order_relaxed);
 		if (rate != 0 && (float)rate != app->dsp.rate)
 			eq_dsp_init(&app->dsp, (float)rate);
 
-		eq_dsp_process(&app->dsp, &app->params, cin, cout, size / sizeof(float));
+		eq_dsp_process(&app->dsp, &app->params, cin, cout, frames);
 
-		for (int i = 0; i < EQ_CHANNELS; i++) {
-			struct spa_data *d = &out->buffer->datas[i];
-			d->chunk->offset = 0;
-			d->chunk->size = size;
-			d->chunk->stride = stride ? stride : (int32_t)sizeof(float);
+		uint32_t index;
+		int32_t filled = spa_ringbuffer_get_write_index(&app->ring, &index);
+		if (filled >= 0 && (uint32_t)filled + frames <= RING_FRAMES) {
+			for (int i = 0; i < EQ_CHANNELS; i++)
+				spa_ringbuffer_write_data(&app->ring, app->ring_data[i],
+							  RING_FRAMES * sizeof(float),
+							  (index & (RING_FRAMES - 1)) * sizeof(float),
+							  app->scratch[i], frames * sizeof(float));
+			spa_ringbuffer_write_update(&app->ring, index + frames);
 		}
 	}
 
-	if (in != NULL)
-		pw_stream_queue_buffer(app->capture, in);
-	if (out != NULL)
-		pw_stream_queue_buffer(app->playback, out);
+	pw_stream_queue_buffer(app->capture, b);
+}
+
+static void playback_process(void *data)
+{
+	struct app *app = data;
+	struct pw_buffer *b = pw_stream_dequeue_buffer(app->playback);
+
+	if (b == NULL)
+		return;
+	if (b->buffer->n_datas < EQ_CHANNELS) {
+		pw_stream_queue_buffer(app->playback, b);
+		return;
+	}
+
+	uint32_t frames = MAX_BLOCK;
+	for (int i = 0; i < EQ_CHANNELS; i++)
+		frames = SPA_MIN(frames, b->buffer->datas[i].maxsize / sizeof(float));
+	if (b->requested)
+		frames = SPA_MIN(frames, (uint32_t)b->requested);
+
+	uint32_t index;
+	int32_t avail = spa_ringbuffer_get_read_index(&app->ring, &index);
+
+	if (avail > (int32_t)(frames * MAX_QUEUED_QUANTA)) {
+		/* Fell behind (e.g. after a hiccup): drop the backlog, keep latency low. */
+		index += avail - frames;
+		avail = frames;
+	}
+
+	for (int i = 0; i < EQ_CHANNELS; i++) {
+		struct spa_data *d = &b->buffer->datas[i];
+		if (avail >= (int32_t)frames)
+			spa_ringbuffer_read_data(&app->ring, app->ring_data[i],
+						 RING_FRAMES * sizeof(float),
+						 (index & (RING_FRAMES - 1)) * sizeof(float),
+						 d->data, frames * sizeof(float));
+		else
+			/* Not enough yet (start-up): silence, and let the ring fill. */
+			memset(d->data, 0, frames * sizeof(float));
+		d->chunk->offset = 0;
+		d->chunk->size = frames * sizeof(float);
+		d->chunk->stride = sizeof(float);
+	}
+	if (avail >= (int32_t)frames)
+		spa_ringbuffer_read_update(&app->ring, index + frames);
+
+	pw_stream_queue_buffer(app->playback, b);
 }
 
 static void capture_param_changed(void *data, uint32_t id, const struct spa_pod *param)
@@ -225,7 +262,7 @@ static bool create_streams(struct app *app)
 	pw_stream_add_listener(app->playback, &app->playback_listener, &playback_events, app);
 
 	if ((res = connect_stream(app->capture, PW_DIRECTION_INPUT, 0)) < 0 ||
-	    (res = connect_stream(app->playback, PW_DIRECTION_OUTPUT, PW_STREAM_FLAG_TRIGGER)) < 0) {
+	    (res = connect_stream(app->playback, PW_DIRECTION_OUTPUT, 0)) < 0) {
 		g_warning("cannot connect streams: %s", spa_strerror(res));
 		return false;
 	}
@@ -264,7 +301,7 @@ static gboolean on_quit_signal(gpointer data)
 
 int main(int argc, char *argv[])
 {
-	struct app app = { 0 };
+	static struct app app;
 
 	setlocale(LC_ALL, "");
 	bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
@@ -278,6 +315,7 @@ int main(int argc, char *argv[])
 	app.exit_code = EXIT_SUCCESS;
 	eq_params_init(&app.params);
 	eq_dsp_init(&app.dsp, 48000.0f);
+	spa_ringbuffer_init(&app.ring);
 	load_settings(&app);
 	g_signal_connect(app.settings, "changed", G_CALLBACK(settings_changed), &app);
 
