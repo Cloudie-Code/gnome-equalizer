@@ -69,7 +69,8 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
           name: Equalizer ${{ github.event.inputs.tag_name || github.ref_name }}
-          draft: true
+          draft: false
+          make_latest: true
           body_path: release_body.md
           files: |
             **/*.deb

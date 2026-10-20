@@ -163,5 +163,5 @@ meson install -C build
 | `just pack-extension` | Pack the extension zip for extensions.gnome.org into `dist/` |
 
 Packaging lives in [`packaging/`](packaging) (`arch/`, `debian/`, `rpm/`, `nix/`, with the
-flake at the root), and the GitHub workflows build every format; pushing a `v*` tag creates a
-draft release with all of them.
+flake at the root), and the GitHub workflows build every format; pushing a `v*` tag publishes a
+release with all of them.
