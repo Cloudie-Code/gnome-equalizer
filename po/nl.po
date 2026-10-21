@@ -39,60 +39,60 @@ msgstr "Pas de lage tonen, hoge tonen, volume-egalisatie en basversterking van d
 msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
 msgstr "equalizer;geluid;audio;bas;lage tonen;hoge tonen;volume;luidheid;"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:6
 #: extension/extension.js:191
 msgid "Apply the equalizer"
 msgstr "Equalizer toepassen"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:7
 msgid ""
 "Whether the equalizer processes the sound of the default output device. When "
 "off, the sound passes through unchanged."
 msgstr "Of de equalizer het geluid van het standaard uitvoerapparaat bewerkt. Indien uitgeschakeld, gaat het geluid ongewijzigd door."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:11
 msgid "Band gains"
 msgstr "Bandversterkingen"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:12
 msgid ""
 "Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
 "and 15 kHz bands."
 msgstr "Versterking in decibel (−12 tot +12) van de banden 60 Hz, 180 Hz, 550 Hz, 1,6 kHz, 5 kHz en 15 kHz."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:16
 #: extension/extension.js:206 src/window.py:107
 msgid "Preset"
 msgstr "Voorinstelling"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:17
 msgid "Identifier of the preset the band gains were taken from, or “custom”."
 msgstr "Identificatie van de voorinstelling waaruit de bandversterkingen komen, of ‘custom’."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:21
 msgid "Loudness equalization"
 msgstr "Volume-egalisatie"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:22
 msgid ""
 "Evens out the perceived volume, so quiet passages are raised and loud ones "
 "are lowered."
 msgstr "Maakt het waargenomen volume gelijkmatiger: zachte passages worden luider en luide zachter."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:26
 #: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
 msgid "Bass boost"
 msgstr "Basversterking"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:27
 msgid "Boosts the lowest frequencies with a low shelf filter."
 msgstr "Versterkt de laagste frequenties met een laag-shelvingfilter."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:32
 msgid "Bass boost level"
 msgstr "Niveau van de basversterking"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:33
 msgid "How much the bass boost raises the low frequencies, in decibels."
 msgstr "Hoeveel de basversterking de lage frequenties verhoogt, in decibel."
 

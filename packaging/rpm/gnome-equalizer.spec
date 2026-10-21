@@ -1,7 +1,8 @@
 %global appid io.github.cloudie_code.equalizer
 %global uuid equalizer@cloudie-code.github.io
+%global schema org.gnome.shell.extensions.cloudie-equalizer
 Name:           gnome-equalizer
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}
 Summary:        Six band equalizer with loudness equalization and bass boost for GNOME
 License:        GPL-3.0-or-later
@@ -62,7 +63,7 @@ sed -i '/gnome-shell\/extensions/d' %{name}.lang
 %{_datadir}/%{name}/
 %{_datadir}/applications/%{appid}.desktop
 %{_datadir}/metainfo/%{appid}.metainfo.xml
-%{_datadir}/glib-2.0/schemas/%{appid}.gschema.xml
+%{_datadir}/glib-2.0/schemas/%{schema}.gschema.xml
 %{_datadir}/icons/hicolor/scalable/apps/%{appid}.svg
 %{_datadir}/icons/hicolor/symbolic/apps/%{appid}-symbolic.svg
 %{_datadir}/gnome-shell/extensions/%{uuid}/
@@ -70,5 +71,8 @@ sed -i '/gnome-shell\/extensions/d' %{name}.lang
 %{_userunitdir}/pipewire.service.wants/%{name}.service
 
 %changelog
+* Wed Oct 21 2026 cloudie-code <344364031+Cloudie-Code@users.noreply.github.com> - 0.1.1-1
+- Follow the extensions.gnome.org review guidelines
+
 * Mon Oct 19 2026 cloudie-code <344364031+Cloudie-Code@users.noreply.github.com> - 0.1.0-1
 - Initial package

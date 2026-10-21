@@ -31,13 +31,14 @@ from gi.repository import Adw, Gdk, Gio, Gtk
 from .window import EqualizerWindow
 
 APP_ID = "io.github.cloudie_code.equalizer"
+SCHEMA_ID = "org.gnome.shell.extensions.cloudie-equalizer"
 
 
 class EqualizerApplication(Adw.Application):
     def __init__(self, version: str):
         super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
         self.version = version
-        self.settings = Gio.Settings(schema_id=APP_ID)
+        self.settings = Gio.Settings(schema_id=SCHEMA_ID)
 
         about = Gio.SimpleAction(name="about")
         about.connect("activate", self._on_about)

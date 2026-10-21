@@ -1,7 +1,7 @@
 project(
     'gnome-equalizer',
     'c',
-    version: '0.1.0',
+    version: '0.1.1',
     license: 'GPL-3.0-or-later',
     meson_version: '>= 1.0.0',
     default_options: [
@@ -15,6 +15,8 @@ i18n = import('i18n')
 gnome = import('gnome')
 
 application_id = 'io.github.cloudie_code.equalizer'
+# extensions.gnome.org requires the schema under org.gnome.shell.extensions.
+schema_id = 'org.gnome.shell.extensions.cloudie-equalizer'
 extension_uuid = 'equalizer@cloudie-code.github.io'
 gettext_package = meson.project_name()
 

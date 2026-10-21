@@ -32,7 +32,7 @@ appstreamcli = find_program('appstreamcli', required: false, disabler: true)
 test('Validate appstream file', appstreamcli,
      args: ['validate', '--no-net', '--explain', appstream_file])
 
-install_data('io.github.cloudie_code.equalizer.gschema.xml',
+install_data(schema_id + '.gschema.xml',
   install_dir: schemadir
 )
 

@@ -1,7 +1,7 @@
 extension_conf = configuration_data()
 extension_conf.set('uuid', extension_uuid)
 extension_conf.set('gettext_domain', gettext_package)
-extension_conf.set('schema', application_id)
+extension_conf.set('schema', schema_id)
 
 configure_file(
     input: 'metadata.json.in',
@@ -21,12 +21,12 @@ install_data(
 # The extension carries its own copy of the schema and the symbolic icon so
 # it also works when installed on its own (e.g. from a zip).
 install_data(
-    '../data/io.github.cloudie_code.equalizer.gschema.xml',
+    '../data' / schema_id + '.gschema.xml',
     install_dir: extensiondir / 'schemas',
 )
 custom_target(
     'extension-gschemas',
-    input: '../data/io.github.cloudie_code.equalizer.gschema.xml',
+    input: '../data' / schema_id + '.gschema.xml',
     output: 'gschemas.compiled',
     command: [
         find_program('glib-compile-schemas'),

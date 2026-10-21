@@ -39,60 +39,60 @@ msgstr "Настройка на ниските и високите честот�
 msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
 msgstr "еквалайзер;звук;аудио;баси;ниски честоти;високи честоти;сила на звука;equalizer;"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:6
 #: extension/extension.js:191
 msgid "Apply the equalizer"
 msgstr "Прилагане на еквалайзера"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:7
 msgid ""
 "Whether the equalizer processes the sound of the default output device. When "
 "off, the sound passes through unchanged."
 msgstr "Дали еквалайзерът обработва звука на стандартното изходно устройство. Когато е изключен, звукът минава без промени."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:11
 msgid "Band gains"
 msgstr "Усилване на лентите"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:12
 msgid ""
 "Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
 "and 15 kHz bands."
 msgstr "Усилване в децибели (от −12 до +12) на лентите 60 Hz, 180 Hz, 550 Hz, 1,6 kHz, 5 kHz и 15 kHz."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:16
 #: extension/extension.js:206 src/window.py:107
 msgid "Preset"
 msgstr "Предварителна настройка"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:17
 msgid "Identifier of the preset the band gains were taken from, or “custom”."
 msgstr "Идентификатор на предварителната настройка, от която са взети стойностите на лентите, или „custom“."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:21
 msgid "Loudness equalization"
 msgstr "Изравняване на силата на звука"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:22
 msgid ""
 "Evens out the perceived volume, so quiet passages are raised and loud ones "
 "are lowered."
 msgstr "Изравнява възприеманата сила на звука: тихите пасажи се усилват, а силните се заглушават."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:26
 #: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
 msgid "Bass boost"
 msgstr "Усилване на басите"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:27
 msgid "Boosts the lowest frequencies with a low shelf filter."
 msgstr "Усилва най-ниските честоти с нискочестотен рафтов филтър."
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:32
 msgid "Bass boost level"
 msgstr "Ниво на усилването на басите"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:33
 msgid "How much the bass boost raises the low frequencies, in decibels."
 msgstr "Колко усилването на басите повдига ниските честоти, в децибели."
 

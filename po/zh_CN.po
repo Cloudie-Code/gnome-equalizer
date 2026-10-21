@@ -39,60 +39,60 @@ msgstr "调整声音输出的低音、高音、响度均衡和低音增强"
 msgid "equalizer;sound;audio;bass;treble;loudness;volume;"
 msgstr "均衡器;声音;音频;低音;高音;响度;音量;equalizer;"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:6
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:6
 #: extension/extension.js:191
 msgid "Apply the equalizer"
 msgstr "应用均衡器"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:7
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:7
 msgid ""
 "Whether the equalizer processes the sound of the default output device. When "
 "off, the sound passes through unchanged."
 msgstr "均衡器是否处理默认输出设备的声音。关闭时，声音原样通过。"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:11
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:11
 msgid "Band gains"
 msgstr "频段增益"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:12
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:12
 msgid ""
 "Gain in decibels (−12 to +12) of the 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz "
 "and 15 kHz bands."
 msgstr "60 Hz、180 Hz、550 Hz、1.6 kHz、5 kHz 和 15 kHz 各频段的增益（分贝，−12 到 +12）。"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:16
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:16
 #: extension/extension.js:206 src/window.py:107
 msgid "Preset"
 msgstr "预设"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:17
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:17
 msgid "Identifier of the preset the band gains were taken from, or “custom”."
 msgstr "频段增益所来自的预设的标识符，或“custom”。"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:21
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:21
 msgid "Loudness equalization"
 msgstr "响度均衡"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:22
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:22
 msgid ""
 "Evens out the perceived volume, so quiet passages are raised and loud ones "
 "are lowered."
 msgstr "平衡感知音量，提高安静段落、降低响亮段落。"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:26
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:26
 #: data/io.github.cloudie_code.equalizer.metainfo.xml.in:17
 msgid "Bass boost"
 msgstr "低音增强"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:27
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:27
 msgid "Boosts the lowest frequencies with a low shelf filter."
 msgstr "使用低架滤波器增强最低频率。"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:32
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:32
 msgid "Bass boost level"
 msgstr "低音增强级别"
 
-#: data/io.github.cloudie_code.equalizer.gschema.xml:33
+#: data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml:33
 msgid "How much the bass boost raises the low frequencies, in decibels."
 msgstr "低音增强对低频的提升量，以分贝为单位。"
 

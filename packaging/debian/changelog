@@ -1,3 +1,10 @@
+gnome-equalizer (0.1.1-1) unstable; urgency=medium
+
+  * Follow the extensions.gnome.org review guidelines: the settings schema
+    is now org.gnome.shell.extensions.cloudie-equalizer.
+
+ -- cloudie-code <344364031+Cloudie-Code@users.noreply.github.com>  Wed, 21 Oct 2026 12:00:00 +0000
+
 gnome-equalizer (0.1.0-1) unstable; urgency=medium
 
   * Initial release.

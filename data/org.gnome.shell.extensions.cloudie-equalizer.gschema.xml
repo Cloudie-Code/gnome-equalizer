@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="gnome-equalizer">
-  <schema id="io.github.cloudie_code.equalizer" path="/io/github/cloudie_code/equalizer/">
+  <schema id="org.gnome.shell.extensions.cloudie-equalizer" path="/org/gnome/shell/extensions/cloudie-equalizer/">
     <key name="enabled" type="b">
       <default>true</default>
       <summary>Apply the equalizer</summary>

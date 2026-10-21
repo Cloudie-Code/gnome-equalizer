@@ -20,7 +20,7 @@
 
 #include "dsp.h"
 
-#define SCHEMA_ID "io.github.cloudie_code.equalizer"
+#define SCHEMA_ID "org.gnome.shell.extensions.cloudie-equalizer"
 #define LINK_GROUP "gnome-equalizer"
 
 /* Frames kept between the two sides; a power of two for the index mask. */

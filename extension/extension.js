@@ -125,7 +125,21 @@ export default class EqualizerExtension extends Extension {
 
         this._restoreDeviceList();
 
+        this._button?.disconnectObject(this);
+        this._menu?.disconnectObject(this);
         this._menu?.close({animate: false});
+
+        this._switch?.destroy();
+        this._switch = null;
+        this._bands?.destroy();
+        this._bands = null;
+        this._presetMenu?.destroy();
+        this._presetMenu = null;
+        this._loudnessItem?.destroy();
+        this._loudnessItem = null;
+        this._bassItem?.destroy();
+        this._bassItem = null;
+        // Destroying the menu also removes it from its PopupMenuManager.
         this._menu?.destroy();
         this._menu = null;
         if (this._outputMenu) {
@@ -136,7 +150,6 @@ export default class EqualizerExtension extends Extension {
             });
             this._outputMenu = null;
         }
-        this._menuManager = null;
         this._button?.destroy();
         this._button = null;
         this._presetItems = null;
@@ -176,7 +189,7 @@ export default class EqualizerExtension extends Extension {
             y_expand: true,
             accessible_name: _('Open equalizer'),
         });
-        this._button.connect('clicked', () => this._menu.toggle());
+        this._button.connectObject('clicked', () => this._menu.toggle(), this);
 
         // Place it between the slider and the output device arrow.
         const box = this._output.child;
@@ -240,14 +253,14 @@ export default class EqualizerExtension extends Extension {
 
         const qsMenu = this._quickSettings.menu;
         qsMenu._overlay.add_child(this._menu.actor);
-        this._menu.connect('open-state-changed', (_m, isOpen) => {
+        this._menu.connectObject('open-state-changed', (_m, isOpen) => {
             qsMenu._setDimmed(isOpen);
             qsMenu._activeMenu = isOpen ? this._menu : null;
             if (isOpen)
                 this._button.add_style_pseudo_class('checked');
             else
                 this._button.remove_style_pseudo_class('checked');
-        });
+        }, this);
 
         // The grid only makes room under a row whose item's `menu` is visible,
         // so while this popup is shown the volume slider reports it as its menu:
@@ -258,8 +271,8 @@ export default class EqualizerExtension extends Extension {
             get: () => (this._menu?.actor.visible ? this._menu : this._outputMenu),
         });
 
-        this._menuManager = new PopupMenu.PopupMenuManager(this._output);
-        this._menuManager.addMenu(this._menu);
+        const menuManager = new PopupMenu.PopupMenuManager(this._output);
+        menuManager.addMenu(this._menu);
     }
 
     _syncEnabled() {

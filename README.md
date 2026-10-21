@@ -50,7 +50,7 @@ apps ─▶ Equalizer (virtual sink) ─▶ 6 × peaking EQ ─▶ bass boost �
 - The GNOME Shell extension (`extension/`) adds the button and the popup, and hides the
   equalizer's own sink from the output device list.
 - The settings app (`src/`, Python + libadwaita) edits the same settings
-  (`io.github.cloudie_code.equalizer`).
+  (`org.gnome.shell.extensions.cloudie-equalizer`).
 
 The Sound panel of GNOME Settings cannot be extended by other programs, so the settings live in
 their own app styled like that panel.

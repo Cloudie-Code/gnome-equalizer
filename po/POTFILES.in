@@ -1,7 +1,7 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
 data/io.github.cloudie_code.equalizer.desktop.in
-data/io.github.cloudie_code.equalizer.gschema.xml
+data/org.gnome.shell.extensions.cloudie-equalizer.gschema.xml
 data/io.github.cloudie_code.equalizer.metainfo.xml.in
 daemon/main.c
 extension/extension.js
