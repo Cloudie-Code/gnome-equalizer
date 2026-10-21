@@ -17,7 +17,6 @@ static void check(int ok, const char *what, double got, double want)
 		failures++;
 }
 
-/* Runs a sine through the DSP and returns the steady-state output level in dB. */
 static double response_db(struct eq_params *params, float freq, float amplitude, float seconds)
 {
 	static float in_l[BLOCK], in_r[BLOCK], out_l[BLOCK], out_r[BLOCK];

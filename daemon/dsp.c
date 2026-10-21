@@ -147,7 +147,6 @@ void eq_dsp_init(struct eq_dsp *dsp, float rate)
 	dsp->limiter_gain = 1.0f;
 }
 
-/* Moves `current` towards `target`; returns true when it changed. */
 static bool glide(float *current, float target, float k)
 {
 	if (*current == target)

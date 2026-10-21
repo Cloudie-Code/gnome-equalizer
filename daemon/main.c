@@ -1,8 +1,4 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later
- *
- * gnome-equalizer-daemon: a PipeWire smart filter that runs the equalizer on
- * whatever output device is the default, configured through GSettings.
- */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
 #include "config.h"
 
 #include <errno.h>
@@ -50,7 +46,6 @@ struct app {
 	_Atomic uint32_t rate;
 	struct eq_dsp dsp;
 
-	/* Processed audio, from the capture side to the playback side. */
 	struct spa_ringbuffer ring;
 	float ring_data[EQ_CHANNELS][RING_FRAMES];
 	float scratch[EQ_CHANNELS][MAX_BLOCK];

@@ -5,10 +5,6 @@ export const BAND_LABELS = ['60', '180', '550', '1.6k', '5k', '15k'];
 export const GAIN_MIN = -12;
 export const GAIN_MAX = 12;
 
-/**
- * @param {Function} _ gettext function of the caller
- * @returns {Array<{id: string, name: string, gains: number[]}>}
- */
 export function getPresets(_) {
     return [
         {id: 'flat', name: _('Flat'), gains: [0, 0, 0, 0, 0, 0]},

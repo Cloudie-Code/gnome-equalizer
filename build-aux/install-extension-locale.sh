@@ -1,5 +1,4 @@
 #!/bin/sh
-# Copies the installed catalogs into the GNOME Shell extension.
 set -eu
 
 localedir="$MESON_INSTALL_DESTDIR_PREFIX/$1"

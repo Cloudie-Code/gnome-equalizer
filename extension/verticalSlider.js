@@ -9,10 +9,6 @@ const SCROLL_STEP = 0.5;
 const KEY_STEP = 1;
 const SNAP_THRESHOLD = 0.6;
 
-/**
- * A vertical slider centred on zero, drawn with the theme's slider style
- * so it matches the volume slider (accent colour, handle, track).
- */
 export const VerticalSlider = GObject.registerClass({
     Properties: {
         'value': GObject.ParamSpec.double(

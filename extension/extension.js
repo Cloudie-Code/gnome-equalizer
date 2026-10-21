@@ -191,7 +191,6 @@ export default class EqualizerExtension extends Extension {
         });
         this._button.connectObject('clicked', () => this._menu.toggle(), this);
 
-        // Place it between the slider and the output device arrow.
         const box = this._output.child;
         box.insert_child_below(this._button, this._output._menuButton);
     }

@@ -34,13 +34,11 @@ struct eq_dsp {
 	float bass_gain;
 	struct eq_biquad bass;
 
-	/* Loudness equalization: K-weighted level detector driving a slow AGC. */
 	struct eq_biquad kw_shelf, kw_highpass;
 	float mean_square;
 	float agc_gain_db;
 	float agc_target_db;
 
-	/* Brick-wall peak limiter with instant attack. */
 	float limiter_gain;
 };
 
