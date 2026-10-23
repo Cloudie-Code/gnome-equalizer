@@ -50,6 +50,11 @@
   </branding>
 
   <releases>
+    <release version="0.1.2" date="2026-10-23">
+      <description>
+        <p>Stabilize loudness equalization, reserve headroom for bass peaks, and prevent volume surges during pauses.</p>
+      </description>
+    </release>
     <release version="0.1.1" date="2026-10-21">
       <description>
         <p>The extension follows the extensions.gnome.org review guidelines. Settings are now stored under org.gnome.shell.extensions.cloudie-equalizer, so the equalizer starts from its defaults again.</p>

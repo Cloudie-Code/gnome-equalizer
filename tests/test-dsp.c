@@ -63,6 +63,111 @@ static double peak_out(struct eq_params *params, float freq, float amplitude)
 	return peak;
 }
 
+/* A steady vocal tone plus intermittent bass: measure the vocal component,
+ * so the bass itself cannot disguise whole-mix gain pumping. */
+static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
+{
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[1024], right[1024];
+	eq_params_init(&params);
+	atomic_store(&params.loudness, true);
+	if (bass_eq) {
+		atomic_store(&params.gains[0], 11.5f);
+		atomic_store(&params.gains[1], 3.5f);
+		atomic_store(&params.bass_boost, true);
+		atomic_store(&params.bass_boost_level, 8.0f);
+	}
+	eq_dsp_init(&dsp, rate);
+	double low = 1e9, high = -1e9, peak = 0;
+	double projection = 0;
+	uint32_t measured = 0;
+	for (uint32_t pos = 0; pos < (uint32_t)(40 * rate); pos += block) {
+		for (uint32_t i = 0; i < block; i++) {
+			double t = (pos + i) / (double)rate;
+			/* Include a full two-second break in the bass every four seconds. */
+			float bass = fmod(t, 4.0) < 2.0 && fmod(t, 0.5) < 0.12
+				? 0.3f * sin(2 * M_PI * 60 * t) : 0;
+			left[i] = right[i] = 0.08f * sin(2 * M_PI * 1000 * t) + bass;
+		}
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, block);
+		for (uint32_t i = 0; i < block; i++) {
+			peak = fmax(peak, fabs(left[i]));
+			if (pos + i >= (uint32_t)(25 * rate)) {
+				projection += left[i] * sin(2 * M_PI * 1000 * (pos + i) / (double)rate);
+				if (++measured == (uint32_t)(rate / 10)) {
+					double gain = 20 * log10(fabs(2 * projection / (0.08 * measured)));
+					low = fmin(low, gain);
+					high = fmax(high, gain);
+					projection = 0;
+					measured = 0;
+				}
+			}
+		}
+	}
+	check(high - low < 1.0, bass_eq ? "vocal stays stable with boosted bass" :
+	      "vocal stays stable with intermittent bass", high - low, 0);
+	check(peak <= 0.89101, "bass transients stay below the peak ceiling", peak, 0.891);
+
+	float gain_before = dsp.agc_gain_db;
+	float level_before = dsp.mean_square;
+	for (uint32_t pos = 0; pos < (uint32_t)(8 * rate); pos += block) {
+		for (uint32_t i = 0; i < block; i++)
+			left[i] = right[i] = 0;
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, block);
+	}
+	check(fabs(dsp.agc_gain_db - gain_before) < 0.5,
+	      "silence does not increase normalizer gain", dsp.agc_gain_db - gain_before, 0);
+	check(dsp.mean_square > level_before * 0.98f,
+	      "silence is excluded from the level average", dsp.mean_square / level_before, 1);
+
+	atomic_store(&params.loudness, false);
+	for (int j = 0; j < (int)(rate / block); j++) {
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, block);
+	}
+	check(dsp.agc_gain_db == 0, "disabling loudness restores unity gain", dsp.agc_gain_db, 0);
+}
+
+static void check_level_changes(void)
+{
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[BLOCK], right[BLOCK];
+	double power[3] = { 0 };
+	uint32_t count[3] = { 0 };
+	eq_params_init(&params);
+	atomic_store(&params.loudness, true);
+	eq_dsp_init(&dsp, RATE);
+	for (uint32_t pos = 0; pos < (uint32_t)(90 * RATE); pos += BLOCK) {
+		for (int i = 0; i < BLOCK; i++) {
+			float amplitude = pos + i >= (uint32_t)(30 * RATE) &&
+				pos + i < (uint32_t)(60 * RATE) ? 0.4f : 0.04f;
+			left[i] = right[i] = amplitude * sin(2 * M_PI * 1000 * (pos + i) / RATE);
+		}
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, BLOCK);
+		for (int i = 0; i < BLOCK; i++) {
+			int section = (int)((pos + i) / (30 * RATE));
+			if (section < 3 && fmod((pos + i) / (double)RATE, 30) >= 29) {
+				power[section] += left[i] * left[i];
+				count[section]++;
+			}
+		}
+	}
+	for (int i = 1; i < 3; i++) {
+		double gap = 10 * log10((power[i] / count[i]) / (power[0] / count[0]));
+		check(fabs(gap) < 1.0, i == 1 ? "normalizes a sustained 20 dB increase" :
+		      "normalizes a sustained 20 dB decrease", gap, 0);
+	}
+}
+
 int main(void)
 {
 	struct eq_params params;
@@ -105,6 +210,12 @@ int main(void)
 		atomic_store(&params.gains[b], 12.0f);
 	double peak = peak_out(&params, 1000, 0.9f);
 	check(peak <= 0.8915, "limiter keeps +12 dB under -1 dBFS", peak, 0.891);
+
+	check_level_changes();
+	check_loudness_stability(false, RATE, BLOCK);
+	check_loudness_stability(true, RATE, BLOCK);
+	check_loudness_stability(true, 44100, 128);
+	check_loudness_stability(true, 48000, 1024);
 
 	return failures ? EXIT_FAILURE : EXIT_SUCCESS;
 }

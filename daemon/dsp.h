@@ -36,10 +36,14 @@ struct eq_dsp {
 
 	struct eq_biquad kw_shelf, kw_highpass;
 	float mean_square;
+	bool loudness_measured;
+	float loudness_peak;
+	uint32_t loudness_peak_hold;
 	float agc_gain_db;
 	float agc_target_db;
 
 	float limiter_gain;
+	uint32_t limiter_hold;
 };
 
 void eq_params_init(struct eq_params *params);

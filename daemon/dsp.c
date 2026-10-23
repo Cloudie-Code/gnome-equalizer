@@ -18,12 +18,17 @@ const float eq_band_freqs[EQ_BANDS] = { 60.0f, 180.0f, 550.0f, 1600.0f, 5000.0f,
 #define LOUDNESS_GATE_DB -50.0f
 #define LOUDNESS_MAX_BOOST_DB 15.0f
 #define LOUDNESS_MAX_CUT_DB -10.0f
-#define LOUDNESS_WINDOW_SEC 0.4f
-#define LOUDNESS_ATTACK_SEC 0.25f
-#define LOUDNESS_RELEASE_SEC 1.5f
+#define LOUDNESS_WINDOW_SEC 3.0f
+#define LOUDNESS_ATTACK_SEC 1.0f
+#define LOUDNESS_RELEASE_SEC 4.0f
+#define LOUDNESS_DEADBAND_DB 0.5f
+#define LOUDNESS_PEAK_HOLD_SEC 3.0f
+#define LOUDNESS_PEAK_RELEASE_SEC 6.0f
+#define LOUDNESS_PEAK_MARGIN_DB 1.0f
 
 #define LIMITER_CEILING 0.891f /* -1 dBFS */
-#define LIMITER_RELEASE_SEC 0.08f
+#define LIMITER_RELEASE_SEC 0.5f
+#define LIMITER_HOLD_SEC 0.1f
 
 #define DB_EPSILON 0.005f
 
@@ -184,28 +189,56 @@ static void update_loudness(struct eq_dsp *dsp, const struct eq_params *params,
 {
 	bool active = atomic_load_explicit(&params->enabled, memory_order_relaxed) &&
 		      atomic_load_explicit(&params->loudness, memory_order_relaxed);
-	float a = 1.0f - expf(-1.0f / (LOUDNESS_WINDOW_SEC * dsp->rate));
-	float ms = dsp->mean_square;
+	double power_sum = 0.0;
+	float peak_release = expf(-1.0f / (LOUDNESS_PEAK_RELEASE_SEC * dsp->rate));
 
 	for (uint32_t i = 0; i < n; i++) {
-		float power = 0.0f;
+		float peak = 0.0f;
 		for (int ch = 0; ch < EQ_CHANNELS; ch++) {
+			peak = fmaxf(peak, fabsf(buf[ch][i]));
 			float x = kw_step(&dsp->kw_shelf, ch, buf[ch][i]);
 			x = kw_step(&dsp->kw_highpass, ch, x);
-			power += x * x;
+			power_sum += (double)x * x;
 		}
-		ms += a * (power - ms);
+		/* Remember bass peaks across beats and short breaks. Otherwise the
+		 * normalizer boosts between beats and repeatedly drives the limiter. */
+		if (peak >= dsp->loudness_peak) {
+			dsp->loudness_peak = peak;
+			dsp->loudness_peak_hold = (uint32_t)(LOUDNESS_PEAK_HOLD_SEC * dsp->rate);
+		} else if (dsp->loudness_peak_hold > 0) {
+			dsp->loudness_peak_hold--;
+		} else {
+			dsp->loudness_peak *= peak_release;
+		}
 	}
-	dsp->mean_square = ms < 1e-20f ? 0.0f : ms;
+
+	float power = (float)(power_sum / n);
+	float level_db = 10.0f * log10f(power + 1e-12f) - 0.691f;
+	/* Exclude silence from the average, rather than letting it decay and
+	 * asking for maximum boost when playback resumes. */
+	if (level_db > LOUDNESS_GATE_DB) {
+		float a = 1.0f - expf(-(float)n / (LOUDNESS_WINDOW_SEC * dsp->rate));
+		if (!dsp->loudness_measured) {
+			dsp->mean_square = power;
+			dsp->loudness_measured = true;
+		} else {
+			dsp->mean_square += a * (power - dsp->mean_square);
+		}
+	}
 
 	if (!active) {
 		dsp->agc_target_db = 0.0f;
+	} else if (level_db > LOUDNESS_GATE_DB) {
+		float average_db = 10.0f * log10f(dsp->mean_square + 1e-12f) - 0.691f;
+		float target = clampf(LOUDNESS_TARGET_DB - average_db,
+				      LOUDNESS_MAX_CUT_DB, LOUDNESS_MAX_BOOST_DB);
+		float headroom = 20.0f * log10f(LIMITER_CEILING /
+					       fmaxf(dsp->loudness_peak, 1e-12f)) - LOUDNESS_PEAK_MARGIN_DB;
+		target = fminf(target, headroom);
+		if (fabsf(target - dsp->agc_target_db) > LOUDNESS_DEADBAND_DB)
+			dsp->agc_target_db = target;
 	} else {
-		float level_db = 10.0f * log10f(dsp->mean_square + 1e-12f) - 0.691f;
-		/* Below the gate it is silence or a fade: hold, do not pump the noise up. */
-		if (level_db > LOUDNESS_GATE_DB)
-			dsp->agc_target_db = clampf(LOUDNESS_TARGET_DB - level_db,
-						    LOUDNESS_MAX_CUT_DB, LOUDNESS_MAX_BOOST_DB);
+		dsp->agc_target_db = dsp->agc_gain_db;
 	}
 }
 
@@ -238,6 +271,9 @@ void eq_dsp_process(struct eq_dsp *dsp, const struct eq_params *params,
 	update_loudness(dsp, params, out, n);
 
 	float tau = dsp->agc_target_db < dsp->agc_gain_db ? LOUDNESS_ATTACK_SEC : LOUDNESS_RELEASE_SEC;
+	if (!atomic_load_explicit(&params->enabled, memory_order_relaxed) ||
+	    !atomic_load_explicit(&params->loudness, memory_order_relaxed))
+		tau = PARAM_SMOOTH_SEC;
 	float start_db = dsp->agc_gain_db;
 	glide(&dsp->agc_gain_db, dsp->agc_target_db, 1.0f - expf(-(float)n / (tau * dsp->rate)));
 	float g0 = db_to_gain(start_db), g1 = db_to_gain(dsp->agc_gain_db);
@@ -262,10 +298,16 @@ void eq_dsp_process(struct eq_dsp *dsp, const struct eq_params *params,
 			out[ch][i] *= g;
 			peak = fmaxf(peak, fabsf(out[ch][i]));
 		}
-		if (peak * lim > LIMITER_CEILING)
+		if (peak * lim > LIMITER_CEILING) {
 			lim = LIMITER_CEILING / peak;
-		else
+			dsp->limiter_hold = (uint32_t)(LIMITER_HOLD_SEC * dsp->rate);
+		} else if (dsp->limiter_hold > 0) {
+			dsp->limiter_hold--;
+		} else {
 			lim += (1.0f - lim) * release;
+			if (peak > 0.0f)
+				lim = fminf(lim, LIMITER_CEILING / peak);
+		}
 		for (int ch = 0; ch < EQ_CHANNELS; ch++)
 			out[ch][i] *= lim;
 	}
