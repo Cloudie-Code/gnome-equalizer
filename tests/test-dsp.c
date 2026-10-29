@@ -113,17 +113,26 @@ static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
 
 	float gain_before = dsp.agc_gain_db;
 	float target_before = dsp.agc_target_db;
+	float short_before = dsp.loudness_short_power;
+	float long_before = dsp.loudness_long_power;
 	for (uint32_t pos = 0; pos < (uint32_t)(8 * rate); pos += block) {
 		for (uint32_t i = 0; i < block; i++)
 			left[i] = right[i] = 0;
 		const float *in[2] = { left, right };
 		float *out[2] = { left, right };
 		eq_dsp_process(&dsp, &params, in, out, block);
+		/* Let the EQ and weighting filters ring out before measuring silence. */
+		if (pos < (uint32_t)rate) {
+			short_before = dsp.loudness_short_power;
+			long_before = dsp.loudness_long_power;
+		}
 	}
 	check(fabs(dsp.agc_gain_db - gain_before) < 0.5,
 	      "silence does not increase normalizer gain", dsp.agc_gain_db - gain_before, 0);
 	check(fabs(dsp.agc_target_db - target_before) < 0.5,
 	      "silence does not request extra boost", dsp.agc_target_db - target_before, 0);
+	check(dsp.loudness_short_power == short_before && dsp.loudness_long_power == long_before,
+	      "silence freezes the loudness meters", dsp.loudness_long_power, long_before);
 
 	atomic_store(&params.loudness, false);
 	for (int j = 0; j < (int)(rate / block); j++) {
@@ -168,8 +177,46 @@ static void check_level_changes(void)
 	}
 	for (int i = 0; i < 3; i++) {
 		double rms = sqrt(power[i] / count[i]);
-		check(rms >= 0.4 / sqrt(2.0) * 0.99,
-		      "levels upwards to at least the loud input", rms, 0.4 / sqrt(2.0));
+		check(rms >= 0.4 / sqrt(2.0) * pow(10.0, -1.0 / 20.0),
+		      "reaches loud input within 1 dB while settling", rms, 0.4 / sqrt(2.0));
+	}
+}
+
+/* Bass-free material must not be driven to full-scale merely because its
+ * waveform leaves more peak headroom. Repeat after a bass-heavy passage. */
+static void check_bass_free_loudness(float rate, uint32_t block)
+{
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[1024], right[1024];
+	double power[2] = { 0 };
+	uint32_t count[2] = { 0 };
+	eq_params_init(&params);
+	atomic_store(&params.loudness, true);
+	eq_dsp_init(&dsp, rate);
+	for (uint32_t pos = 0; pos < (uint32_t)(90 * rate); pos += block) {
+		for (uint32_t i = 0; i < block; i++) {
+			double t = (pos + i) / (double)rate;
+			float bass = t >= 30 && t < 60 ? 0.3f * sin(2 * M_PI * 60 * t) : 0;
+			left[i] = right[i] = 0.08f * sin(2 * M_PI * 1000 * t) + bass;
+		}
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, block);
+		for (uint32_t i = 0; i < block; i++) {
+			double t = (pos + i) / (double)rate;
+			int section = t >= 29 && t < 30 ? 0 : t >= 89 && t < 90 ? 1 : -1;
+			if (section >= 0) {
+				power[section] += left[i] * left[i];
+				count[section]++;
+			}
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		double rms = sqrt(power[i] / count[i]);
+		check(rms < 0.34, i ? "removing bass does not over-amplify the mix" :
+		      "bass-free audio has a loudness boost ceiling", rms, 0.34);
+		check(rms > 0.08 / sqrt(2.0), "quiet bass-free audio is still raised", rms, 0.08 / sqrt(2.0));
 	}
 }
 
@@ -226,6 +273,9 @@ int main(void)
 	check(peak <= 0.8915, "limiter keeps +12 dB under -1 dBFS", peak, 0.891);
 
 	check_level_changes();
+	check_bass_free_loudness(48000, 512);
+	check_bass_free_loudness(44100, 128);
+	check_bass_free_loudness(48000, 1024);
 	check_loudness_stability(false, RATE, BLOCK);
 	check_loudness_stability(true, RATE, BLOCK);
 	check_loudness_stability(true, 44100, 128);

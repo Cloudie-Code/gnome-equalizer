@@ -35,6 +35,9 @@ struct eq_dsp {
 	struct eq_biquad bass;
 
 	struct eq_biquad kw_shelf, kw_highpass;
+	float loudness_short_power;
+	float loudness_long_power;
+	bool loudness_measured;
 	float loudness_peak;
 	uint32_t loudness_peak_hold;
 	float agc_gain_db;

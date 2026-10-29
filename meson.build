@@ -1,7 +1,7 @@
 project(
     'gnome-equalizer',
     'c',
-    version: '0.1.3',
+    version: '0.1.4',
     license: 'GPL-3.0-or-later',
     meson_version: '>= 1.0.0',
     default_options: [

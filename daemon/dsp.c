@@ -15,6 +15,10 @@ const float eq_band_freqs[EQ_BANDS] = { 60.0f, 180.0f, 550.0f, 1600.0f, 5000.0f,
 #define PARAM_SMOOTH_SEC 0.04f
 
 #define LOUDNESS_GATE_DB -50.0f
+#define LOUDNESS_BOOST_CEILING_DB -8.0f
+#define LOUDNESS_SHORT_SEC 0.4f
+#define LOUDNESS_LONG_SEC 3.0f
+#define LOUDNESS_SHORT_MARGIN_DB 3.0f
 #define LOUDNESS_MAX_BOOST_DB 30.0f
 #define LOUDNESS_ATTACK_SEC 1.0f
 #define LOUDNESS_RELEASE_SEC 4.0f
@@ -212,13 +216,30 @@ static void update_loudness(struct eq_dsp *dsp, const struct eq_params *params,
 	float level_db = 10.0f * log10f(power + 1e-12f) - 0.691f;
 	if (!active) {
 		dsp->agc_target_db = 0.0f;
+		dsp->loudness_measured = false;
 	} else if (level_db > LOUDNESS_GATE_DB) {
+		/* Separate perceived loudness from peak protection: peak headroom
+		 * alone over-amplifies voices and other bass-free material. The long
+		 * meter sets the boost; the short meter bounds sudden loudness rises.
+		 * Silence freezes both meters so pauses cannot request more gain. */
+		if (!dsp->loudness_measured) {
+			dsp->loudness_short_power = dsp->loudness_long_power = power;
+			dsp->loudness_measured = true;
+		} else {
+			float short_k = 1.0f - expf(-(float)n / (LOUDNESS_SHORT_SEC * dsp->rate));
+			float long_k = 1.0f - expf(-(float)n / (LOUDNESS_LONG_SEC * dsp->rate));
+			dsp->loudness_short_power += short_k * (power - dsp->loudness_short_power);
+			dsp->loudness_long_power += long_k * (power - dsp->loudness_long_power);
+		}
+		float long_db = 10.0f * log10f(dsp->loudness_long_power + 1e-12f) - 0.691f;
+		float short_db = 10.0f * log10f(dsp->loudness_short_power + 1e-12f) - 0.691f;
+		float measured_db = fmaxf(long_db, short_db - LOUDNESS_SHORT_MARGIN_DB);
 		float headroom = 20.0f * log10f(LIMITER_CEILING /
 					       fmaxf(dsp->loudness_peak, 1e-12f)) - LOUDNESS_PEAK_MARGIN_DB;
-		/* Level upwards to the available peak ceiling. A fixed loudness
-		 * target turns already loud audio down; negative peak headroom
-		 * must be handled by the limiter, not by the normalizer. */
-		float target = clampf(headroom, 0.0f, LOUDNESS_MAX_BOOST_DB);
+		/* This is a ceiling on amplification, not a normalization target
+		 * for loud audio: only the limiter may attenuate an overloaded mix. */
+		float target = clampf(fminf(LOUDNESS_BOOST_CEILING_DB - measured_db, headroom),
+				      0.0f, LOUDNESS_MAX_BOOST_DB);
 		if (fabsf(target - dsp->agc_target_db) > LOUDNESS_DEADBAND_DB)
 			dsp->agc_target_db = target;
 	} else {

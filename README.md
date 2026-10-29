@@ -24,8 +24,10 @@
 
 - **Six band equalizer**: 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz and 15 kHz, from −12 to +12 dB,
   with presets (Flat, Bass, Treble, Vocal, Rock, Pop, Jazz, Classical, Electronic).
-- **Loudness Equalization**: raises quiet passages towards the output peak ceiling,
-  with up to +30 dB of smooth automatic gain, without turning loud passages down.
+- **Loudness Equalization**: raises quiet passages using short and long K-weighted
+  energy measurements (400 ms and 3 seconds), with up to +30 dB of smooth gain.
+  A −8 LUFS boost ceiling keeps bass-free material from being amplified to full scale;
+  audio already above that level is preserved.
   Peak headroom is held across beats and short bass breaks to avoid whole-mix volume pumping;
   a K-weighted silence gate holds the gain during pauses instead of turning it up.
 - **Bass Boost**: a low shelf at 110 Hz, from +1 to +12 dB.
