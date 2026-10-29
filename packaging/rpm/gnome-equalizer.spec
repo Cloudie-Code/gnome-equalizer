@@ -2,7 +2,7 @@
 %global uuid equalizer@cloudie-code.github.io
 %global schema org.gnome.shell.extensions.cloudie-equalizer
 Name:           gnome-equalizer
-Version:        0.1.2
+Version:        0.1.3
 Release:        1%{?dist}
 Summary:        Six band equalizer with loudness equalization and bass boost for GNOME
 License:        GPL-3.0-or-later
@@ -71,6 +71,9 @@ sed -i '/gnome-shell\/extensions/d' %{name}.lang
 %{_userunitdir}/pipewire.service.wants/%{name}.service
 
 %changelog
+* Thu Oct 29 2026 cloudie-code <344364031+Cloudie-Code@users.noreply.github.com> - 0.1.3-1
+- Raise quiet audio towards the peak ceiling without lowering loud passages
+
 * Fri Oct 23 2026 cloudie-code <344364031+Cloudie-Code@users.noreply.github.com> - 0.1.2-1
 - Stabilize loudness equalization and prevent bass-driven volume pumping
 

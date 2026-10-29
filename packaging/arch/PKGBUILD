@@ -1,6 +1,6 @@
 # Maintainer: cloudie-code
 pkgname=gnome-equalizer
-pkgver=0.1.2
+pkgver=0.1.3
 pkgrel=1
 pkgdesc="Six band equalizer with loudness equalization and bass boost for GNOME"
 arch=('x86_64' 'aarch64')

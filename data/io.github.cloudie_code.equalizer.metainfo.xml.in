@@ -50,6 +50,11 @@
   </branding>
 
   <releases>
+    <release version="0.1.3" date="2026-10-29">
+      <description>
+        <p>Raise quiet audio towards the output peak ceiling without lowering loud passages, while preserving bass stability and clipping protection.</p>
+      </description>
+    </release>
     <release version="0.1.2" date="2026-10-23">
       <description>
         <p>Stabilize loudness equalization, reserve headroom for bass peaks, and prevent volume surges during pauses.</p>

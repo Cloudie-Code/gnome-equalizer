@@ -112,7 +112,7 @@ static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
 	check(peak <= 0.89101, "bass transients stay below the peak ceiling", peak, 0.891);
 
 	float gain_before = dsp.agc_gain_db;
-	float level_before = dsp.mean_square;
+	float target_before = dsp.agc_target_db;
 	for (uint32_t pos = 0; pos < (uint32_t)(8 * rate); pos += block) {
 		for (uint32_t i = 0; i < block; i++)
 			left[i] = right[i] = 0;
@@ -122,8 +122,8 @@ static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
 	}
 	check(fabs(dsp.agc_gain_db - gain_before) < 0.5,
 	      "silence does not increase normalizer gain", dsp.agc_gain_db - gain_before, 0);
-	check(dsp.mean_square > level_before * 0.98f,
-	      "silence is excluded from the level average", dsp.mean_square / level_before, 1);
+	check(fabs(dsp.agc_target_db - target_before) < 0.5,
+	      "silence does not request extra boost", dsp.agc_target_db - target_before, 0);
 
 	atomic_store(&params.loudness, false);
 	for (int j = 0; j < (int)(rate / block); j++) {
@@ -166,6 +166,11 @@ static void check_level_changes(void)
 		check(fabs(gap) < 1.0, i == 1 ? "normalizes a sustained 20 dB increase" :
 		      "normalizes a sustained 20 dB decrease", gap, 0);
 	}
+	for (int i = 0; i < 3; i++) {
+		double rms = sqrt(power[i] / count[i]);
+		check(rms >= 0.4 / sqrt(2.0) * 0.99,
+		      "levels upwards to at least the loud input", rms, 0.4 / sqrt(2.0));
+	}
 }
 
 int main(void)
@@ -201,6 +206,15 @@ int main(void)
 
 	eq_params_init(&params);
 	atomic_store(&params.loudness, true);
+	const float levels[] = { 0.15f, 0.5f, 0.8f, 0.88f, 0.95f };
+	for (unsigned i = 0; i < sizeof(levels) / sizeof(levels[0]); i++) {
+		atomic_store(&params.loudness, false);
+		double baseline = response_db(&params, 1000, levels[i], 20);
+		atomic_store(&params.loudness, true);
+		double gain = response_db(&params, 1000, levels[i], 20);
+		snprintf(what, sizeof(what), "loudness preserves volume at amplitude %.2f", levels[i]);
+		check(gain >= baseline - 0.05, what, gain, baseline);
+	}
 	double quiet = response_db(&params, 1000, 0.01f, 8) + 20.0 * log10(0.01 / sqrt(2));
 	double loud = response_db(&params, 1000, 0.5f, 8) + 20.0 * log10(0.5 / sqrt(2));
 	check(fabs(quiet - loud) < 12.0, "loudness eq shrinks a 34 dB gap below 12 dB", quiet - loud, 0);

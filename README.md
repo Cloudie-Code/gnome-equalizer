@@ -24,10 +24,10 @@
 
 - **Six band equalizer**: 60 Hz, 180 Hz, 550 Hz, 1.6 kHz, 5 kHz and 15 kHz, from −12 to +12 dB,
   with presets (Flat, Bass, Treble, Vocal, Rock, Pop, Jazz, Classical, Electronic).
-- **Loudness Equalization**: evens out the perceived volume, so quiet passages are raised
-  and loud ones lowered (a gated three-second K-weighted average driving smooth automatic gain).
+- **Loudness Equalization**: raises quiet passages towards the output peak ceiling,
+  with up to +30 dB of smooth automatic gain, without turning loud passages down.
   Peak headroom is held across beats and short bass breaks to avoid whole-mix volume pumping;
-  silence holds the gain instead of turning it up.
+  a K-weighted silence gate holds the gain during pauses instead of turning it up.
 - **Bass Boost**: a low shelf at 110 Hz, from +1 to +12 dB.
 - **In the system menu**: an equalizer button next to the volume slider opens a popup
   with the bands, the presets and both options.

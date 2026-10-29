@@ -14,15 +14,12 @@ const float eq_band_freqs[EQ_BANDS] = { 60.0f, 180.0f, 550.0f, 1600.0f, 5000.0f,
 /* Parameter changes glide over this time so moving a slider never clicks. */
 #define PARAM_SMOOTH_SEC 0.04f
 
-#define LOUDNESS_TARGET_DB -18.0f
 #define LOUDNESS_GATE_DB -50.0f
-#define LOUDNESS_MAX_BOOST_DB 15.0f
-#define LOUDNESS_MAX_CUT_DB -10.0f
-#define LOUDNESS_WINDOW_SEC 3.0f
+#define LOUDNESS_MAX_BOOST_DB 30.0f
 #define LOUDNESS_ATTACK_SEC 1.0f
 #define LOUDNESS_RELEASE_SEC 4.0f
 #define LOUDNESS_DEADBAND_DB 0.5f
-#define LOUDNESS_PEAK_HOLD_SEC 3.0f
+#define LOUDNESS_PEAK_HOLD_SEC 4.0f
 #define LOUDNESS_PEAK_RELEASE_SEC 6.0f
 #define LOUDNESS_PEAK_MARGIN_DB 1.0f
 
@@ -148,7 +145,6 @@ void eq_dsp_init(struct eq_dsp *dsp, float rate)
 	biquad_shelf(&dsp->kw_shelf, rate, 1681.97f, 1.0f, 4.0f, true);
 	biquad_highpass(&dsp->kw_highpass, rate, 38.13f, 0.5f);
 
-	dsp->mean_square = 0.0f;
 	dsp->limiter_gain = 1.0f;
 }
 
@@ -214,27 +210,15 @@ static void update_loudness(struct eq_dsp *dsp, const struct eq_params *params,
 
 	float power = (float)(power_sum / n);
 	float level_db = 10.0f * log10f(power + 1e-12f) - 0.691f;
-	/* Exclude silence from the average, rather than letting it decay and
-	 * asking for maximum boost when playback resumes. */
-	if (level_db > LOUDNESS_GATE_DB) {
-		float a = 1.0f - expf(-(float)n / (LOUDNESS_WINDOW_SEC * dsp->rate));
-		if (!dsp->loudness_measured) {
-			dsp->mean_square = power;
-			dsp->loudness_measured = true;
-		} else {
-			dsp->mean_square += a * (power - dsp->mean_square);
-		}
-	}
-
 	if (!active) {
 		dsp->agc_target_db = 0.0f;
 	} else if (level_db > LOUDNESS_GATE_DB) {
-		float average_db = 10.0f * log10f(dsp->mean_square + 1e-12f) - 0.691f;
-		float target = clampf(LOUDNESS_TARGET_DB - average_db,
-				      LOUDNESS_MAX_CUT_DB, LOUDNESS_MAX_BOOST_DB);
 		float headroom = 20.0f * log10f(LIMITER_CEILING /
 					       fmaxf(dsp->loudness_peak, 1e-12f)) - LOUDNESS_PEAK_MARGIN_DB;
-		target = fminf(target, headroom);
+		/* Level upwards to the available peak ceiling. A fixed loudness
+		 * target turns already loud audio down; negative peak headroom
+		 * must be handled by the limiter, not by the normalizer. */
+		float target = clampf(headroom, 0.0f, LOUDNESS_MAX_BOOST_DB);
 		if (fabsf(target - dsp->agc_target_db) > LOUDNESS_DEADBAND_DB)
 			dsp->agc_target_db = target;
 	} else {
@@ -278,6 +262,7 @@ void eq_dsp_process(struct eq_dsp *dsp, const struct eq_params *params,
 	glide(&dsp->agc_gain_db, dsp->agc_target_db, 1.0f - expf(-(float)n / (tau * dsp->rate)));
 	float g0 = db_to_gain(start_db), g1 = db_to_gain(dsp->agc_gain_db);
 	bool enabled = atomic_load_explicit(&params->enabled, memory_order_relaxed);
+	bool loudness = enabled && atomic_load_explicit(&params->loudness, memory_order_relaxed);
 
 	/* Bypassed and fully settled: the copy above is the output. */
 	bool processing = enabled || dsp->bass_gain != 0.0f || dsp->agc_gain_db != 0.0f ||
@@ -298,6 +283,11 @@ void eq_dsp_process(struct eq_dsp *dsp, const struct eq_params *params,
 			out[ch][i] *= g;
 			peak = fmaxf(peak, fabsf(out[ch][i]));
 		}
+		/* Overdriven EQ/bass still needs attenuation to avoid clipping.
+		 * Share the held peak so the limiter does not pump between beats
+		 * when upward normalization has reached unity gain. */
+		if (loudness)
+			peak = fmaxf(peak, dsp->loudness_peak * g);
 		if (peak * lim > LIMITER_CEILING) {
 			lim = LIMITER_CEILING / peak;
 			dsp->limiter_hold = (uint32_t)(LIMITER_HOLD_SEC * dsp->rate);
