@@ -81,6 +81,7 @@ static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
 	eq_dsp_init(&dsp, rate);
 	double low = 1e9, high = -1e9, peak = 0;
 	double projection = 0;
+	double projection_cosine = 0;
 	uint32_t measured = 0;
 	for (uint32_t pos = 0; pos < (uint32_t)(40 * rate); pos += block) {
 		for (uint32_t i = 0; i < block; i++) {
@@ -97,11 +98,13 @@ static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
 			peak = fmax(peak, fabs(left[i]));
 			if (pos + i >= (uint32_t)(25 * rate)) {
 				projection += left[i] * sin(2 * M_PI * 1000 * (pos + i) / (double)rate);
+				projection_cosine += left[i] * cos(2 * M_PI * 1000 * (pos + i) / (double)rate);
 				if (++measured == (uint32_t)(rate / 10)) {
-					double gain = 20 * log10(fabs(2 * projection / (0.08 * measured)));
+					double gain = 20 * log10(2 * hypot(projection, projection_cosine) / (0.08 * measured));
 					low = fmin(low, gain);
 					high = fmax(high, gain);
 					projection = 0;
+					projection_cosine = 0;
 					measured = 0;
 				}
 			}
@@ -113,8 +116,7 @@ static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
 
 	float gain_before = dsp.agc_gain_db;
 	float target_before = dsp.agc_target_db;
-	float short_before = dsp.loudness_short_power;
-	float long_before = dsp.loudness_long_power;
+	float long_before = dsp.loudness_power;
 	for (uint32_t pos = 0; pos < (uint32_t)(8 * rate); pos += block) {
 		for (uint32_t i = 0; i < block; i++)
 			left[i] = right[i] = 0;
@@ -123,16 +125,15 @@ static void check_loudness_stability(bool bass_eq, float rate, uint32_t block)
 		eq_dsp_process(&dsp, &params, in, out, block);
 		/* Let the EQ and weighting filters ring out before measuring silence. */
 		if (pos < (uint32_t)rate) {
-			short_before = dsp.loudness_short_power;
-			long_before = dsp.loudness_long_power;
+			long_before = dsp.loudness_power;
 		}
 	}
 	check(fabs(dsp.agc_gain_db - gain_before) < 0.5,
 	      "silence does not increase normalizer gain", dsp.agc_gain_db - gain_before, 0);
 	check(fabs(dsp.agc_target_db - target_before) < 0.5,
 	      "silence does not request extra boost", dsp.agc_target_db - target_before, 0);
-	check(dsp.loudness_short_power == short_before && dsp.loudness_long_power == long_before,
-	      "silence freezes the loudness meters", dsp.loudness_long_power, long_before);
+	check(dsp.loudness_power == long_before,
+	      "silence freezes the loudness meter", dsp.loudness_power, long_before);
 
 	atomic_store(&params.loudness, false);
 	for (int j = 0; j < (int)(rate / block); j++) {
@@ -220,6 +221,192 @@ static void check_bass_free_loudness(float rate, uint32_t block)
 	}
 }
 
+/* Track changes while the music is playing, rather than checking only the
+ * last second after thirty seconds of settling. Bass has its own peak budget. */
+static void check_music_dynamics(float rate, uint32_t block)
+{
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[1024], right[1024];
+	eq_params_init(&params);
+	atomic_store(&params.loudness, true);
+	atomic_store(&params.gains[0], 11.5f);
+	atomic_store(&params.gains[1], 3.5f);
+	atomic_store(&params.bass_boost, true);
+	atomic_store(&params.bass_boost_level, 4.0f);
+	eq_dsp_init(&dsp, rate);
+	double low = 1e9, high = -1e9, peak = 0;
+	double sine = 0, cosine = 0;
+	uint32_t measured = 0;
+	for (uint32_t pos = 0; pos < (uint32_t)(40 * rate); pos += block) {
+		for (uint32_t i = 0; i < block; i++) {
+			double t = (pos + i) / (double)rate;
+			float amplitude = fmod(t, 8) < 4 ? 0.04f : 0.32f;
+			double beat = fmod(t, 0.7), phrase = fmod(t, 11);
+			float bass = 0;
+			if (phrase < 7 && beat < 0.31) {
+				/* Taper note ends so this level-tracking test does not add
+				 * broadband clicks to the otherwise steady vocal tone. */
+				double envelope = fmin(1.0, fmin(beat / 0.005, (0.31 - beat) / 0.01));
+				envelope *= fmin(1.0, fmin(phrase / 0.005, (7 - phrase) / 0.01));
+				bass = 0.4f * envelope * sin(2 * M_PI * 60 * t);
+			}
+			left[i] = right[i] = amplitude * sin(2 * M_PI * 1000 * t) + bass;
+		}
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, block);
+		for (uint32_t i = 0; i < block; i++) {
+			double t = (pos + i) / (double)rate;
+			peak = fmax(peak, fabs(left[i]));
+			sine += left[i] * sin(2 * M_PI * 1000 * t);
+			cosine += left[i] * cos(2 * M_PI * 1000 * t);
+			if (++measured == (uint32_t)(rate / 10)) {
+				if (t >= 3 && fmod(t, 4) > 1.5) {
+					double level = 20 * log10(2 * hypot(sine, cosine) / measured);
+					low = fmin(low, level);
+					high = fmax(high, level);
+				}
+				sine = cosine = 0;
+				measured = 0;
+			}
+		}
+	}
+	check(high - low < 2.0, "music levels settle within 1.5 s despite bass", high - low, 0);
+	check(peak <= 0.89101, "separate band protection prevents clipping", peak, 0.891);
+}
+
+static double bass_balance_db(float bass_level)
+{
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[BLOCK], right[BLOCK];
+	eq_params_init(&params);
+	atomic_store(&params.loudness, true);
+	if (bass_level >= 0) {
+		atomic_store(&params.gains[0], 11.5f);
+		atomic_store(&params.gains[1], 3.5f);
+		atomic_store(&params.bass_boost, true);
+		atomic_store(&params.bass_boost_level, bass_level);
+	}
+	eq_dsp_init(&dsp, RATE);
+	double bass_sine = 0, bass_cosine = 0, mid_sine = 0, mid_cosine = 0;
+	for (uint32_t pos = 0; pos < (uint32_t)(8 * RATE); pos += BLOCK) {
+		uint32_t n = (uint32_t)(8 * RATE) - pos;
+		if (n > BLOCK)
+			n = BLOCK;
+		for (uint32_t i = 0; i < n; i++) {
+			double t = (pos + i) / (double)RATE;
+			left[i] = right[i] = 0.1 * sin(2 * M_PI * 60 * t) + 0.08 * sin(2 * M_PI * 1000 * t);
+		}
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, n);
+		for (uint32_t i = 0; i < n; i++) {
+			if (pos + i < (uint32_t)(7 * RATE))
+				continue;
+			double t = (pos + i) / (double)RATE;
+			bass_sine += left[i] * sin(2 * M_PI * 60 * t);
+			bass_cosine += left[i] * cos(2 * M_PI * 60 * t);
+			mid_sine += left[i] * sin(2 * M_PI * 1000 * t);
+			mid_cosine += left[i] * cos(2 * M_PI * 1000 * t);
+		}
+	}
+	return 20 * log10(hypot(bass_sine, bass_cosine) / hypot(mid_sine, mid_cosine));
+}
+
+static void check_small_gain_changes(void)
+{
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[BLOCK], right[BLOCK];
+	eq_params_init(&params);
+	atomic_store(&params.loudness, true);
+	eq_dsp_init(&dsp, RATE);
+	double low = 1e9, high = -1e9;
+	for (uint32_t pos = 0; pos < (uint32_t)(24 * RATE); pos += BLOCK) {
+		for (uint32_t i = 0; i < BLOCK; i++) {
+			double t = (pos + i) / (double)RATE;
+			double amplitude = 0.1 * pow(10.0, 2.0 * sin(2 * M_PI * t / 4) / 20.0);
+			left[i] = right[i] = amplitude * sin(2 * M_PI * 1000 * t);
+		}
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, BLOCK);
+		if (pos >= (uint32_t)(12 * RATE)) {
+			low = fmin(low, dsp.agc_gain_db);
+			high = fmax(high, dsp.agc_gain_db);
+		}
+	}
+	check(high - low < 1.25, "gain does not chase small musical swells", high - low, 1.25);
+}
+
+static void check_treble_distortion(void)
+{
+	const int frequencies[] = { 503, 797, 1103, 1601, 2401, 3407, 5003, 7103 };
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[BLOCK], right[BLOCK];
+	double sine[8] = { 0 }, cosine[8] = { 0 }, power = 0;
+	uint32_t count = 0;
+	eq_params_init(&params);
+	atomic_store(&params.loudness, true);
+	atomic_store(&params.gains[0], 11.5f);
+	atomic_store(&params.gains[1], 3.5f);
+	atomic_store(&params.bass_boost, true);
+	atomic_store(&params.bass_boost_level, 4.0f);
+	eq_dsp_init(&dsp, RATE);
+	for (uint32_t pos = 0; pos < (uint32_t)(12 * RATE); pos += BLOCK) {
+		uint32_t n = (uint32_t)(12 * RATE) - pos;
+		if (n > BLOCK)
+			n = BLOCK;
+		for (uint32_t i = 0; i < n; i++) {
+			double x = 0, t = (pos + i) / (double)RATE;
+			for (int k = 0; k < 8; k++)
+				x += 0.025 * sin(2 * M_PI * frequencies[k] * t);
+			left[i] = right[i] = x;
+		}
+		const float *in[2] = { left, right };
+		float *out[2] = { left, right };
+		eq_dsp_process(&dsp, &params, in, out, n);
+		for (uint32_t i = 0; i < n; i++) {
+			if (pos + i < (uint32_t)(11 * RATE))
+				continue;
+			double t = (pos + i) / (double)RATE;
+			power += left[i] * left[i];
+			count++;
+			for (int k = 0; k < 8; k++) {
+				sine[k] += left[i] * sin(2 * M_PI * frequencies[k] * t);
+				cosine[k] += left[i] * cos(2 * M_PI * frequencies[k] * t);
+			}
+		}
+	}
+	double fundamentals = 0;
+	for (int k = 0; k < 8; k++)
+		fundamentals += 2 * (sine[k] * sine[k] + cosine[k] * cosine[k]) / ((double)count * count);
+	double distortion = 10 * log10(fmax(power / count - fundamentals, 1e-15) / fundamentals);
+	check(distortion < -45, "treble peaks do not produce granular distortion", distortion, -45);
+}
+
+static void check_bypass_delay(void)
+{
+	struct eq_params params;
+	struct eq_dsp dsp;
+	float left[1024] = { 0.25f }, right[1024] = { -0.125f };
+	eq_params_init(&params);
+	atomic_store(&params.enabled, false);
+	eq_dsp_init(&dsp, RATE);
+	const float *in[2] = { left, right };
+	float *out[2] = { left, right };
+	eq_dsp_process(&dsp, &params, in, out, 1024);
+	double error = 0;
+	for (uint32_t i = 0; i < 1024; i++) {
+		error = fmax(error, fabs(left[i] - (i == 2 * dsp.delay_frames ? 0.25 : 0)));
+		error = fmax(error, fabs(right[i] - (i == 2 * dsp.delay_frames ? -0.125 : 0)));
+	}
+	check(error < 1e-7, "bypass preserves samples at the fixed delay", error, 0);
+}
+
 int main(void)
 {
 	struct eq_params params;
@@ -253,14 +440,15 @@ int main(void)
 
 	eq_params_init(&params);
 	atomic_store(&params.loudness, true);
-	const float levels[] = { 0.15f, 0.5f, 0.8f, 0.88f, 0.95f };
+	const float levels[] = { 0.04f, 0.15f, 0.5f, 0.8f, 0.88f, 0.95f };
+	double reference_level = 0;
 	for (unsigned i = 0; i < sizeof(levels) / sizeof(levels[0]); i++) {
-		atomic_store(&params.loudness, false);
-		double baseline = response_db(&params, 1000, levels[i], 20);
-		atomic_store(&params.loudness, true);
 		double gain = response_db(&params, 1000, levels[i], 20);
-		snprintf(what, sizeof(what), "loudness preserves volume at amplitude %.2f", levels[i]);
-		check(gain >= baseline - 0.05, what, gain, baseline);
+		double level = gain + 20 * log10(levels[i] / sqrt(2.0));
+		if (i == 0)
+			reference_level = level;
+		snprintf(what, sizeof(what), "constant output at input amplitude %.2f", levels[i]);
+		check(fabs(level - reference_level) < 0.25, what, level, reference_level);
 	}
 	double quiet = response_db(&params, 1000, 0.01f, 8) + 20.0 * log10(0.01 / sqrt(2));
 	double loud = response_db(&params, 1000, 0.5f, 8) + 20.0 * log10(0.5 / sqrt(2));
@@ -272,7 +460,17 @@ int main(void)
 	double peak = peak_out(&params, 1000, 0.9f);
 	check(peak <= 0.8915, "limiter keeps +12 dB under -1 dBFS", peak, 0.891);
 
+	double bass_balance = bass_balance_db(4) - bass_balance_db(-1);
+	check(bass_balance > 5.0, "loudness preserves audible bass boost", bass_balance, 5);
+	double bass_range = bass_balance_db(12) - bass_balance_db(6);
+	check(bass_range > 3.0, "bass controls remain effective above +12 dB", bass_range, 3);
+	check_treble_distortion();
+	check_bypass_delay();
+	check_small_gain_changes();
 	check_level_changes();
+	check_music_dynamics(48000, 512);
+	check_music_dynamics(44100, 128);
+	check_music_dynamics(48000, 1024);
 	check_bass_free_loudness(48000, 512);
 	check_bass_free_loudness(44100, 128);
 	check_bass_free_loudness(48000, 1024);

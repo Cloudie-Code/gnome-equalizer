@@ -50,6 +50,11 @@
   </branding>
 
   <releases>
+    <release version="0.1.5" date="2026-10-29">
+      <description>
+        <p>Keep loudness steady while preserving the selected bass balance. Independent bass and midrange protection prevents bass peaks from ducking the whole mix, smoother gain control reduces volume pumping, and lookahead peak protection prevents treble distortion.</p>
+      </description>
+    </release>
     <release version="0.1.4" date="2026-10-29">
       <description>
         <p>Prevent excessive amplification in passages with little bass by measuring perceived loudness over short and long periods, while preserving audio that is already loud.</p>

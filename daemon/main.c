@@ -11,6 +11,7 @@
 
 #include <pipewire/pipewire.h>
 #include <spa/param/audio/format-utils.h>
+#include <spa/param/latency-utils.h>
 #include <spa/utils/result.h>
 #include <spa/utils/ringbuffer.h>
 
@@ -208,14 +209,20 @@ static int connect_stream(struct pw_stream *stream, enum spa_direction direction
 		.format = SPA_AUDIO_FORMAT_F32P,
 		.channels = EQ_CHANNELS,
 		.position = { SPA_AUDIO_CHANNEL_FL, SPA_AUDIO_CHANNEL_FR });
-	const struct spa_pod *params[1];
+	const struct spa_pod *params[2];
+	uint32_t n_params = 1;
 
 	params[0] = spa_format_audio_raw_build(&b, SPA_PARAM_EnumFormat, &info);
+	if (direction == PW_DIRECTION_INPUT) {
+		struct spa_process_latency_info latency = SPA_PROCESS_LATENCY_INFO_INIT(
+			.ns = (int64_t)2 * EQ_LOOKAHEAD_MS * 1000000);
+		params[n_params++] = spa_process_latency_build(&b, SPA_PARAM_ProcessLatency, &latency);
+	}
 
 	return pw_stream_connect(stream, direction, PW_ID_ANY,
 				 flags | PW_STREAM_FLAG_AUTOCONNECT |
 				 PW_STREAM_FLAG_MAP_BUFFERS | PW_STREAM_FLAG_RT_PROCESS,
-				 params, 1);
+				 params, n_params);
 }
 
 static bool create_streams(struct app *app)
